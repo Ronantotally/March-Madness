@@ -8,6 +8,7 @@ import RegionBracket from "@/components/bracket/RegionBracket";
 import FinalFour from "@/components/bracket/FinalFour";
 import BracketHeader from "@/components/bracket/BracketHeader";
 import MatchupDetail from "@/components/bracket/MatchupDetail";
+import { useChatContext } from "@/components/chat/ChatContext";
 
 const REGIONS_TOP = ["East", "South"];
 const REGIONS_BOTTOM = ["Midwest", "West"];
@@ -17,6 +18,7 @@ export default function BracketPage() {
     createInitialBracketState()
   );
   const [expandedGame, setExpandedGame] = useState<BracketGame | null>(null);
+  const { askQuestion } = useChatContext();
 
   const handlePick = useCallback((gameId: string, team: Team) => {
     setBracketState((prev) => advanceTeam(prev, gameId, team));
@@ -30,10 +32,13 @@ export default function BracketPage() {
     setBracketState(createInitialBracketState());
   }, []);
 
-  const handleAskAnalyst = useCallback((_teamA: Team, _teamB: Team) => {
-    // Future: open chat panel with matchup context pre-loaded
+  const handleAskAnalyst = useCallback((teamA: Team, teamB: Team) => {
     setExpandedGame(null);
-  }, []);
+    askQuestion(
+      `Break down the matchup between ${teamA.name} (${teamA.seed}-seed) and ${teamB.name} (${teamB.seed}-seed). Who wins and why?`,
+      { view: "bracket", matchup: { teamA, teamB } }
+    );
+  }, [askQuestion]);
 
   return (
     <div className="mx-auto max-w-[1600px] px-4 py-6">
