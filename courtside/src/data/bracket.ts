@@ -165,6 +165,7 @@ export function createInitialBracketState(): BracketState {
 
 /**
  * Advance a team as the winner of a game, propagating to the next round.
+ * If the pick changed, cascade-clears any downstream picks that depended on the old winner.
  */
 export function advanceTeam(
   state: BracketState,
@@ -180,6 +181,8 @@ export function advanceTeam(
   const game = newState.games[gameId];
   if (!game) return newState;
 
+  const oldWinner = game.winner;
+
   // Set winner
   newState.games[gameId] = { ...game, winner };
 
@@ -190,6 +193,11 @@ export function advanceTeam(
     newState.picks[existingPickIndex] = pick;
   } else {
     newState.picks.push(pick);
+  }
+
+  // Cascade clear downstream if the winner changed
+  if (oldWinner && oldWinner.name !== winner.name) {
+    cascadeClear(newState, gameId, oldWinner);
   }
 
   // Propagate to next round
@@ -213,7 +221,42 @@ export function advanceTeam(
   return newState;
 }
 
-function getNextGameId(gameId: string): string | null {
+/**
+ * Recursively clear a team from all downstream games when a pick is changed.
+ */
+function cascadeClear(state: BracketState, fromGameId: string, oldTeam: Team): void {
+  const nextId = getNextGameId(fromGameId);
+  if (!nextId || !state.games[nextId]) return;
+
+  const nextGame = { ...state.games[nextId] };
+  let changed = false;
+
+  if (nextGame.topSeed?.name === oldTeam.name) {
+    nextGame.topSeed = null;
+    changed = true;
+  }
+  if (nextGame.bottomSeed?.name === oldTeam.name) {
+    nextGame.bottomSeed = null;
+    changed = true;
+  }
+  if (nextGame.winner?.name === oldTeam.name) {
+    nextGame.winner = null;
+    state.picks = state.picks.filter((p) => p.gameId !== nextId);
+    changed = true;
+  }
+
+  state.games[nextId] = nextGame;
+
+  if (nextId === "CHAMP-1" && state.champion?.name === oldTeam.name) {
+    state.champion = null;
+  }
+
+  if (changed) {
+    cascadeClear(state, nextId, oldTeam);
+  }
+}
+
+export function getNextGameId(gameId: string): string | null {
   const parts = gameId.split("-");
 
   // Final Four → Championship

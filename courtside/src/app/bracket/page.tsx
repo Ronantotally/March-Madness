@@ -1,65 +1,100 @@
-import { GitBranch, Trophy, Users } from "lucide-react";
+"use client";
+
+import { useState, useCallback } from "react";
+import { AnimatePresence } from "framer-motion";
+import { Team, BracketGame } from "@/types";
+import { createInitialBracketState, advanceTeam } from "@/data/bracket";
+import RegionBracket from "@/components/bracket/RegionBracket";
+import FinalFour from "@/components/bracket/FinalFour";
+import BracketHeader from "@/components/bracket/BracketHeader";
+import MatchupDetail from "@/components/bracket/MatchupDetail";
+
+const REGIONS_TOP = ["East", "South"];
+const REGIONS_BOTTOM = ["Midwest", "West"];
 
 export default function BracketPage() {
+  const [bracketState, setBracketState] = useState(() =>
+    createInitialBracketState()
+  );
+  const [expandedGame, setExpandedGame] = useState<BracketGame | null>(null);
+
+  const handlePick = useCallback((gameId: string, team: Team) => {
+    setBracketState((prev) => advanceTeam(prev, gameId, team));
+  }, []);
+
+  const handleExpand = useCallback((game: BracketGame) => {
+    setExpandedGame(game);
+  }, []);
+
+  const handleReset = useCallback(() => {
+    setBracketState(createInitialBracketState());
+  }, []);
+
+  const handleAskAnalyst = useCallback((_teamA: Team, _teamB: Team) => {
+    // Future: open chat panel with matchup context pre-loaded
+    setExpandedGame(null);
+  }, []);
+
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12">
-      {/* Hero */}
-      <div className="mb-12 text-center">
-        <h1 className="mb-3 text-3xl font-bold tracking-tight text-text-primary">
+    <div className="mx-auto max-w-[1600px] px-4 py-6">
+      {/* Header */}
+      <div className="mb-4">
+        <h1 className="mb-1 text-2xl font-bold tracking-tight text-text-primary">
           Bracket Builder
         </h1>
-        <p className="mx-auto max-w-lg text-sm text-text-secondary">
-          Build your bracket with AI-powered matchup analysis. Click any game to
-          get a detailed breakdown of the head-to-head matchup.
+        <p className="max-w-2xl text-sm text-text-secondary">
+          Click a team to advance them. Colored borders show matchup confidence.
+          Click the compare icon for detailed analysis.
         </p>
       </div>
 
-      {/* Placeholder bracket area */}
-      <div className="mb-8 flex h-[560px] items-center justify-center rounded-xl border border-border bg-surface">
-        <div className="text-center">
-          <GitBranch
-            size={48}
-            className="mx-auto mb-4 text-text-secondary/30"
-          />
-          <p className="text-sm text-text-secondary">
-            Interactive bracket will render here
-          </p>
-          <p className="mt-1 font-mono text-xs text-text-secondary/50">
-            64-team bracket · drag &amp; drop · round by round
-          </p>
-        </div>
-      </div>
+      {/* Live stats */}
+      <BracketHeader bracketState={bracketState} onReset={handleReset} />
 
-      {/* Summary cards placeholder */}
-      <div className="grid grid-cols-2 gap-4">
-        {[
-          {
-            label: "Teams Selected",
-            value: "0 / 63",
-            icon: Users,
-            color: "text-accent-green",
-          },
-          {
-            label: "Champion",
-            value: "TBD",
-            icon: Trophy,
-            color: "text-accent-gold",
-          },
-        ].map((card) => (
-          <div
-            key={card.label}
-            className="rounded-lg border border-border bg-surface p-4"
-          >
-            <div className="mb-2 flex items-center gap-2">
-              <card.icon size={14} className={card.color} />
-              <span className="text-xs text-text-secondary">{card.label}</span>
-            </div>
-            <p className={`font-mono text-2xl font-bold ${card.color}`}>
-              {card.value}
-            </p>
-          </div>
+      {/* Region brackets — 2×2 grid */}
+      <div className="mb-4 grid grid-cols-2 gap-4">
+        {REGIONS_TOP.map((region) => (
+          <RegionBracket
+            key={region}
+            region={region}
+            bracketState={bracketState}
+            onPick={handlePick}
+            onExpand={handleExpand}
+          />
         ))}
       </div>
+
+      {/* Final Four */}
+      <div className="mb-4">
+        <FinalFour
+          bracketState={bracketState}
+          onPick={handlePick}
+          onExpand={handleExpand}
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        {REGIONS_BOTTOM.map((region) => (
+          <RegionBracket
+            key={region}
+            region={region}
+            bracketState={bracketState}
+            onPick={handlePick}
+            onExpand={handleExpand}
+          />
+        ))}
+      </div>
+
+      {/* Matchup detail modal */}
+      <AnimatePresence>
+        {expandedGame && expandedGame.topSeed && expandedGame.bottomSeed && (
+          <MatchupDetail
+            game={expandedGame}
+            onClose={() => setExpandedGame(null)}
+            onAskAnalyst={handleAskAnalyst}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 }
