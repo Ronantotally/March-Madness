@@ -1,16 +1,17 @@
 "use client";
 
 import { useMemo } from "react";
-import { Trophy, TrendingUp, AlertTriangle, Target, RotateCcw } from "lucide-react";
+import { Trophy, TrendingUp, AlertTriangle, Target, RotateCcw, Share2 } from "lucide-react";
 import { BracketState, Team } from "@/types";
 import { analyzeMatchup } from "@/data/matchup";
 
 interface Props {
   bracketState: BracketState;
   onReset: () => void;
+  onShare?: () => void;
 }
 
-export default function BracketHeader({ bracketState, onReset }: Props) {
+export default function BracketHeader({ bracketState, onReset, onShare }: Props) {
   const stats = useMemo(() => {
     const picks = bracketState.picks;
     const totalPicks = picks.length;
@@ -79,9 +80,9 @@ export default function BracketHeader({ bracketState, onReset }: Props) {
   }, [bracketState]);
 
   return (
-    <div className="mb-4 rounded-xl border border-border bg-surface p-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-6">
+    <div className="mb-4 rounded-xl border border-border bg-surface p-3 sm:p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-3 sm:gap-6">
           {/* Picks counter */}
           <div className="flex items-center gap-2">
             <Target size={14} className="text-accent-green" />
@@ -154,14 +155,25 @@ export default function BracketHeader({ bracketState, onReset }: Props) {
           )}
         </div>
 
-        {/* Reset button */}
-        <button
-          onClick={onReset}
-          className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs text-text-secondary transition-colors hover:bg-background hover:text-text-primary"
-        >
-          <RotateCcw size={12} />
-          Reset
-        </button>
+        {/* Actions */}
+        <div className="flex items-center gap-1.5">
+          {onShare && stats.totalPicks > 0 && (
+            <button
+              onClick={onShare}
+              className="flex items-center gap-1.5 rounded-md bg-accent-gold/10 px-3 py-1.5 text-xs font-medium text-accent-gold transition-colors hover:bg-accent-gold/20"
+            >
+              <Share2 size={12} />
+              Share
+            </button>
+          )}
+          <button
+            onClick={onReset}
+            className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs text-text-secondary transition-colors hover:bg-background hover:text-text-primary"
+          >
+            <RotateCcw size={12} />
+            Reset
+          </button>
+        </div>
       </div>
     </div>
   );

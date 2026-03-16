@@ -1,8 +1,9 @@
 "use client";
 
 import { useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { X, MessageSquare, AlertTriangle, Shield, Zap } from "lucide-react";
+import { X, MessageSquare, AlertTriangle, Shield, Zap, Triangle } from "lucide-react";
 import { Team, BracketGame, TeamTier, UpsetRisk } from "@/types";
 import { analyzeMatchup } from "@/data/matchup";
 import { getTrapezoidVertices } from "@/data/trapezoid";
@@ -113,6 +114,7 @@ interface Props {
 }
 
 export default function MatchupDetail({ game, onClose, onAskAnalyst }: Props) {
+  const router = useRouter();
   const teamA = game.topSeed;
   const teamB = game.bottomSeed;
 
@@ -283,13 +285,23 @@ export default function MatchupDetail({ game, onClose, onAskAnalyst }: Props) {
         </div>
 
         {/* Actions */}
-        <div className="px-4 py-3">
+        <div className="flex gap-2 px-4 py-3">
           <button
             onClick={() => onAskAnalyst(teamA, teamB)}
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-accent-gold/10 py-2 text-xs font-semibold text-accent-gold transition-colors hover:bg-accent-gold/20"
+            className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-accent-gold/10 py-2 text-xs font-semibold text-accent-gold transition-colors hover:bg-accent-gold/20"
           >
             <MessageSquare size={13} />
             Ask the Analyst
+          </button>
+          <button
+            onClick={() => {
+              onClose();
+              router.push(`/?team=${encodeURIComponent(teamA.name)}`);
+            }}
+            className="flex items-center justify-center gap-1.5 rounded-lg bg-accent-green/10 px-3 py-2 text-xs font-semibold text-accent-green transition-colors hover:bg-accent-green/20"
+            title={`View ${teamA.name} on Trapezoid`}
+          >
+            <Triangle size={11} />
           </button>
         </div>
       </motion.div>

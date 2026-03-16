@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback, useRef } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Team, TeamTier } from "@/types";
 import { getAllTeams } from "@/data/teamUtils";
@@ -52,15 +52,24 @@ interface Props {
   filter: FilterMode;
   filterRegion?: string;
   filterSeedRange?: [number, number];
+  highlightedTeam?: string | null;
 }
 
-export default function TrapezoidChart({ filter, filterRegion, filterSeedRange }: Props) {
+export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, highlightedTeam }: Props) {
   const allTeams = useMemo(() => getAllTeams(), []);
   const vertices = useMemo(() => getTrapezoidVertices(), []);
   const [hoveredTeam, setHoveredTeam] = useState<Team | null>(null);
   const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
   const svgRef = useRef<SVGSVGElement>(null);
+
+  // Auto-select highlighted team from cross-page navigation
+  useEffect(() => {
+    if (highlightedTeam) {
+      const team = allTeams.find((t) => t.name === highlightedTeam);
+      if (team) setSelectedTeam(team);
+    }
+  }, [highlightedTeam, allTeams]);
 
   // Apply filters
   const filteredTeams = useMemo(() => {
@@ -289,22 +298,38 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange }
             const isDimmed = dimmedTeams.has(team.name);
             const isHovered = hoveredTeam?.name === team.name;
             const isSelected = selectedTeam?.name === team.name;
+            const isHighlighted = highlightedTeam === team.name;
             const isGold = team.tier === "title_contender";
 
             return (
               <g key={team.name}>
+                {/* Highlight pulse ring */}
+                {isHighlighted && (
+                  <circle
+                    cx={cx}
+                    cy={cy}
+                    r={r * 2.5}
+                    fill="none"
+                    stroke="#F5A623"
+                    strokeWidth={2}
+                    opacity={0.6}
+                    className="animate-ping"
+                  />
+                )}
                 <circle
                   cx={cx}
                   cy={cy}
-                  r={isHovered ? r * 1.5 : isSelected ? r * 1.3 : r}
+                  r={isHighlighted ? r * 1.5 : isHovered ? r * 1.5 : isSelected ? r * 1.3 : r}
                   fill={color}
                   fillOpacity={isDimmed ? 0.12 : isGold ? 0.9 : 0.75}
-                  stroke={isSelected ? "#e8e9ed" : isHovered ? color : "none"}
-                  strokeWidth={isSelected ? 2 : isHovered ? 1.5 : 0}
+                  stroke={isHighlighted ? "#F5A623" : isSelected ? "#e8e9ed" : isHovered ? color : "none"}
+                  strokeWidth={isHighlighted ? 2.5 : isSelected ? 2 : isHovered ? 1.5 : 0}
                   filter={isGold && !isDimmed ? "url(#glow-gold)" : undefined}
                   style={{
                     cursor: "pointer",
                     transition: "r 0.15s ease, fill-opacity 0.2s ease, stroke-width 0.15s ease",
+                    transformOrigin: `${cx}px ${cy}px`,
+                    animation: `dot-appear 0.4s ease-out ${Math.random() * 0.6}s both`,
                   }}
                   onMouseMove={(e) => handleMouseMove(e, team)}
                   onMouseLeave={() => setHoveredTeam(null)}

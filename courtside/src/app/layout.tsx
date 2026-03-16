@@ -18,9 +18,25 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Courtside — March Madness Analytics",
+  title: "Courtside — March Madness Analytics 2026",
   description:
-    "Trapezoid analysis and bracket builder for NCAA Tournament picks",
+    "Trapezoid of Excellence analysis and interactive bracket builder for the 2026 NCAA Tournament. Powered by real KenPom data and AI-driven insights.",
+  keywords: ["March Madness", "NCAA Tournament", "Bracket Builder", "KenPom", "Trapezoid of Excellence", "2026"],
+  authors: [{ name: "Courtside" }],
+  openGraph: {
+    title: "Courtside — March Madness Analytics 2026",
+    description: "Interactive Trapezoid analysis & bracket builder for NCAA Tournament picks.",
+    type: "website",
+    siteName: "Courtside",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Courtside — March Madness Analytics 2026",
+    description: "Interactive Trapezoid analysis & bracket builder for NCAA Tournament picks.",
+  },
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
@@ -29,7 +45,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark" suppressHydrationWarning>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <meta name="theme-color" content="#0a0b0f" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
       >

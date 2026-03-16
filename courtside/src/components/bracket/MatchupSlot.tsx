@@ -104,24 +104,34 @@ interface Props {
   onPick: (team: Team) => void;
   onExpand: () => void;
   compact?: boolean;
+  highlightedTeam?: string | null;
 }
 
-export default function MatchupSlot({ game, onPick, onExpand, compact }: Props) {
+export default function MatchupSlot({ game, onPick, onExpand, compact, highlightedTeam }: Props) {
   const confidenceColor = getConfidenceColor(game);
   const hasMatchup = game.topSeed && game.bottomSeed;
+  const isHighlighted = highlightedTeam && (
+    game.topSeed?.name === highlightedTeam || game.bottomSeed?.name === highlightedTeam
+  );
 
   // Win probability preview
   let winProbTop: number | null = null;
+  let isUpsetPick = false;
   if (game.topSeed && game.bottomSeed) {
     const analysis = analyzeMatchup(game.topSeed, game.bottomSeed);
     winProbTop = analysis.winProbabilityA;
+    // Check if the winner is an upset pick
+    if (game.winner) {
+      const higherSeed = game.topSeed.seed <= game.bottomSeed.seed ? game.topSeed : game.bottomSeed;
+      isUpsetPick = game.winner.name !== higherSeed.name && Math.abs(game.topSeed.seed - game.bottomSeed.seed) >= 4;
+    }
   }
 
   return (
     <div
-      className={`group relative overflow-hidden rounded border border-border bg-surface ${
+      className={`group relative overflow-hidden rounded border bg-surface transition-shadow ${
         compact ? "w-[160px]" : "w-[185px]"
-      }`}
+      } ${isHighlighted ? "border-accent-gold ring-2 ring-accent-gold/40" : "border-border"} ${isUpsetPick ? "upset-glow" : ""}`}
       style={{ borderLeftColor: confidenceColor, borderLeftWidth: 3 }}
     >
       <TeamRow

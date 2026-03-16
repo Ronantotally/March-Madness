@@ -1,16 +1,29 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { Suspense, useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { Triangle, TrendingUp, Shield } from "lucide-react";
 import TrapezoidChart, { FilterMode } from "@/components/trapezoid/TrapezoidChart";
 import ChartFilters from "@/components/trapezoid/ChartFilters";
 import ChartLegend from "@/components/trapezoid/ChartLegend";
 import { getAllTeams } from "@/data/teamUtils";
 
-export default function Home() {
+function HomeContent() {
+  const searchParams = useSearchParams();
   const [filter, setFilter] = useState<FilterMode>("all");
   const [filterRegion, setFilterRegion] = useState("East");
   const [filterSeedRange, setFilterSeedRange] = useState<[number, number]>([1, 4]);
+  const [highlightedTeam, setHighlightedTeam] = useState<string | null>(null);
+
+  // Handle ?team= query param for cross-page navigation
+  useEffect(() => {
+    const teamName = searchParams.get("team");
+    if (teamName) {
+      setHighlightedTeam(teamName);
+      const timer = setTimeout(() => setHighlightedTeam(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [searchParams]);
 
   const teams = useMemo(() => getAllTeams(), []);
 
@@ -21,7 +34,7 @@ export default function Home() {
   ).length;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8">
+    <div className="mx-auto max-w-7xl px-3 py-4 sm:px-4 sm:py-8">
       {/* Header */}
       <div className="mb-6">
         <h1 className="mb-1 text-2xl font-bold tracking-tight text-text-primary">
@@ -51,6 +64,7 @@ export default function Home() {
           filter={filter}
           filterRegion={filterRegion}
           filterSeedRange={filterSeedRange}
+          highlightedTeam={highlightedTeam}
         />
       </div>
 
@@ -63,7 +77,7 @@ export default function Home() {
       </div>
 
       {/* Stat cards */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
         {[
           {
             label: "In Trapezoid",
@@ -99,5 +113,13 @@ export default function Home() {
         ))}
       </div>
     </div>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense>
+      <HomeContent />
+    </Suspense>
   );
 }

@@ -13,8 +13,8 @@ export default function Nav() {
   const pathname = usePathname();
 
   return (
-    <header className="border-b border-border bg-surface/80 backdrop-blur-md">
-      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
+    <header className="sticky top-0 z-30 border-b border-border bg-surface/80 backdrop-blur-md">
+      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-3 sm:px-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-md bg-accent-gold/10">
@@ -55,7 +55,7 @@ export default function Nav() {
         </nav>
 
         {/* Spacer for balance */}
-        <div className="w-32" />
+        <div className="hidden w-32 sm:block" />
       </div>
     </header>
   );

@@ -10,9 +10,10 @@ interface Props {
   bracketState: BracketState;
   onPick: (gameId: string, team: Team) => void;
   onExpand: (game: BracketGame) => void;
+  highlightedTeam?: string | null;
 }
 
-export default function RegionBracket({ region, bracketState, onPick, onExpand }: Props) {
+export default function RegionBracket({ region, bracketState, onPick, onExpand, highlightedTeam }: Props) {
   // Get games for this region organized by round
   const gamesByRound: Record<Round, BracketGame[]> = {
     R64: [], R32: [], S16: [], E8: [], F4: [], CHAMP: [],
@@ -30,14 +31,14 @@ export default function RegionBracket({ region, bracketState, onPick, onExpand }
   }
 
   return (
-    <div className="rounded-xl border border-border bg-surface p-4">
+    <div className="rounded-xl border border-border bg-surface p-3 sm:p-4">
       {/* Region header */}
       <h3 className="mb-3 text-center text-sm font-bold tracking-wide text-text-primary">
         {region.toUpperCase()}
       </h3>
 
-      {/* Bracket grid */}
-      <div className="flex gap-3">
+      {/* Bracket grid — horizontal scroll on small screens */}
+      <div className="flex gap-3 overflow-x-auto pb-2">
         {ROUND_ORDER.map((round) => {
           const games = gamesByRound[round];
           if (games.length === 0) return null;
@@ -66,6 +67,7 @@ export default function RegionBracket({ region, bracketState, onPick, onExpand }
                     onPick={(team) => onPick(game.id, team)}
                     onExpand={() => onExpand(game)}
                     compact={round !== "R64"}
+                    highlightedTeam={highlightedTeam}
                   />
                 ))}
               </div>

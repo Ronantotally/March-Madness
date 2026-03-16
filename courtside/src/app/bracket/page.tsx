@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { Suspense, useState, useCallback, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
 import { Team, BracketGame } from "@/types";
 import { createInitialBracketState, advanceTeam } from "@/data/bracket";
@@ -8,17 +9,31 @@ import RegionBracket from "@/components/bracket/RegionBracket";
 import FinalFour from "@/components/bracket/FinalFour";
 import BracketHeader from "@/components/bracket/BracketHeader";
 import MatchupDetail from "@/components/bracket/MatchupDetail";
+import ShareCard from "@/components/shared/ShareCard";
 import { useChatContext } from "@/components/chat/ChatContext";
 
 const REGIONS_TOP = ["East", "South"];
 const REGIONS_BOTTOM = ["Midwest", "West"];
 
-export default function BracketPage() {
+function BracketContent() {
+  const searchParams = useSearchParams();
   const [bracketState, setBracketState] = useState(() =>
     createInitialBracketState()
   );
   const [expandedGame, setExpandedGame] = useState<BracketGame | null>(null);
+  const [highlightedTeam, setHighlightedTeam] = useState<string | null>(null);
+  const [shareOpen, setShareOpen] = useState(false);
   const { askQuestion } = useChatContext();
+
+  // Handle ?team= query param for cross-page navigation
+  useEffect(() => {
+    const teamName = searchParams.get("team");
+    if (teamName) {
+      setHighlightedTeam(teamName);
+      const timer = setTimeout(() => setHighlightedTeam(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [searchParams]);
 
   const handlePick = useCallback((gameId: string, team: Team) => {
     setBracketState((prev) => advanceTeam(prev, gameId, team));
@@ -41,7 +56,7 @@ export default function BracketPage() {
   }, [askQuestion]);
 
   return (
-    <div className="mx-auto max-w-[1600px] px-4 py-6">
+    <div className="mx-auto max-w-[1600px] px-3 py-4 sm:px-4 sm:py-6">
       {/* Header */}
       <div className="mb-4">
         <h1 className="mb-1 text-2xl font-bold tracking-tight text-text-primary">
@@ -54,10 +69,10 @@ export default function BracketPage() {
       </div>
 
       {/* Live stats */}
-      <BracketHeader bracketState={bracketState} onReset={handleReset} />
+      <BracketHeader bracketState={bracketState} onReset={handleReset} onShare={() => setShareOpen(true)} />
 
-      {/* Region brackets — 2×2 grid */}
-      <div className="mb-4 grid grid-cols-2 gap-4">
+      {/* Region brackets — 2×2 grid on desktop, 1-col on mobile */}
+      <div className="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
         {REGIONS_TOP.map((region) => (
           <RegionBracket
             key={region}
@@ -65,6 +80,7 @@ export default function BracketPage() {
             bracketState={bracketState}
             onPick={handlePick}
             onExpand={handleExpand}
+            highlightedTeam={highlightedTeam}
           />
         ))}
       </div>
@@ -75,10 +91,11 @@ export default function BracketPage() {
           bracketState={bracketState}
           onPick={handlePick}
           onExpand={handleExpand}
+          highlightedTeam={highlightedTeam}
         />
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {REGIONS_BOTTOM.map((region) => (
           <RegionBracket
             key={region}
@@ -86,6 +103,7 @@ export default function BracketPage() {
             bracketState={bracketState}
             onPick={handlePick}
             onExpand={handleExpand}
+            highlightedTeam={highlightedTeam}
           />
         ))}
       </div>
@@ -100,6 +118,21 @@ export default function BracketPage() {
           />
         )}
       </AnimatePresence>
+
+      {/* Share card modal */}
+      <ShareCard
+        bracketState={bracketState}
+        isOpen={shareOpen}
+        onClose={() => setShareOpen(false)}
+      />
     </div>
+  );
+}
+
+export default function BracketPage() {
+  return (
+    <Suspense>
+      <BracketContent />
+    </Suspense>
   );
 }

@@ -16,9 +16,10 @@ interface Props {
   bracketState: BracketState;
   onPick: (gameId: string, team: Team) => void;
   onExpand: (game: BracketGame) => void;
+  highlightedTeam?: string | null;
 }
 
-export default function FinalFour({ bracketState, onPick, onExpand }: Props) {
+export default function FinalFour({ bracketState, onPick, onExpand, highlightedTeam }: Props) {
   const f4_1 = bracketState.games["F4-1"];
   const f4_2 = bracketState.games["F4-2"];
   const champ = bracketState.games["CHAMP-1"];
@@ -38,6 +39,7 @@ export default function FinalFour({ bracketState, onPick, onExpand }: Props) {
               game={f4_1}
               onPick={(team) => onPick(f4_1.id, team)}
               onExpand={() => onExpand(f4_1)}
+              highlightedTeam={highlightedTeam}
             />
           )}
         </div>
@@ -50,6 +52,7 @@ export default function FinalFour({ bracketState, onPick, onExpand }: Props) {
               game={champ}
               onPick={(team) => onPick(champ.id, team)}
               onExpand={() => onExpand(champ)}
+              highlightedTeam={highlightedTeam}
             />
           )}
           {/* Champion display */}
@@ -72,6 +75,7 @@ export default function FinalFour({ bracketState, onPick, onExpand }: Props) {
               game={f4_2}
               onPick={(team) => onPick(f4_2.id, team)}
               onExpand={() => onExpand(f4_2)}
+              highlightedTeam={highlightedTeam}
             />
           )}
         </div>

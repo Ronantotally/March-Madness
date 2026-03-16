@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { X, Trophy, Target, Shield, Zap, TrendingUp, BarChart3, Gauge, Dice5 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { X, Trophy, Target, Shield, Zap, TrendingUp, BarChart3, Gauge, Dice5, ArrowRight } from "lucide-react";
 import { Team, TeamTier } from "@/types";
 
 const TIER_COLORS: Record<TeamTier, string> = {
@@ -85,6 +86,7 @@ function CheckItem({ label, met }: { label: string; met: boolean }) {
 }
 
 export default function TeamCard({ team, onClose }: Props) {
+  const router = useRouter();
   const tierColor = TIER_COLORS[team.tier];
 
   return (
@@ -208,10 +210,21 @@ export default function TeamCard({ team, onClose }: Props) {
       </div>
 
       {/* Verdict */}
-      <div className="px-4 py-3">
+      <div className="border-b border-border px-4 py-3">
         <p className="text-xs leading-relaxed text-text-secondary">
           {TIER_VERDICTS[team.tier]}
         </p>
+      </div>
+
+      {/* View in Bracket link */}
+      <div className="px-4 py-3">
+        <button
+          onClick={() => router.push(`/bracket?team=${encodeURIComponent(team.name)}`)}
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-accent-gold/10 py-2 text-xs font-semibold text-accent-gold transition-colors hover:bg-accent-gold/20"
+        >
+          <ArrowRight size={13} />
+          View in Bracket
+        </button>
       </div>
     </motion.div>
   );

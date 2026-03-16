@@ -154,7 +154,7 @@ export default function ChatPanel() {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed right-0 top-0 z-40 flex h-full w-[400px] max-w-full flex-col border-l border-border bg-surface shadow-2xl"
+            className="fixed right-0 top-0 z-40 flex h-full w-full flex-col border-l border-border bg-surface shadow-2xl sm:w-[400px]"
           >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-border px-4 py-3">
@@ -224,7 +224,7 @@ export default function ChatPanel() {
                   {messages.map((msg) => (
                     <div
                       key={msg.id}
-                      className={`flex ${
+                      className={`fade-in-up flex ${
                         msg.role === "user" ? "justify-end" : "justify-start"
                       }`}
                     >
