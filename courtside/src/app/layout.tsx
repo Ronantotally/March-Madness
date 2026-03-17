@@ -21,21 +21,30 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000"),
-  title: "Courtside — March Madness Analytics 2026",
+  title: "Courtside — March Madness Bracket Analyzer",
   description:
-    "Trapezoid of KenPom analysis and interactive bracket builder for the 2026 NCAA Tournament. Powered by real KenPom data and AI-driven insights.",
+    "Analyze every matchup using KenPom data and the Trapezoid framework. AI-powered bracket builder for all 68 teams.",
   keywords: ["March Madness", "NCAA Tournament", "Bracket Builder", "KenPom", "Trapezoid of KenPom", "2026"],
   authors: [{ name: "Courtside" }],
   openGraph: {
-    title: "Courtside — March Madness Analytics 2026",
-    description: "Interactive Trapezoid analysis & bracket builder for NCAA Tournament picks.",
+    title: "Courtside — March Madness Bracket Analyzer",
+    description: "Analyze every matchup using KenPom data and the Trapezoid framework. AI-powered bracket builder for all 68 teams.",
     type: "website",
     siteName: "Courtside",
+    images: [
+      {
+        url: "/og.png",
+        width: 1200,
+        height: 630,
+        alt: "Courtside — Trapezoid of KenPom visualization showing all 68 tournament teams",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Courtside — March Madness Analytics 2026",
-    description: "Interactive Trapezoid analysis & bracket builder for NCAA Tournament picks.",
+    title: "Courtside — March Madness Bracket Analyzer",
+    description: "Analyze every matchup using KenPom data and the Trapezoid framework. AI-powered bracket builder for all 68 teams.",
+    images: ["/og.png"],
   },
   icons: {
     icon: "/favicon.ico",
