@@ -82,7 +82,7 @@ export default function OGImage() {
 
         {/* Feature pills */}
         <div style={{ display: "flex", gap: 16 }}>
-          {["Trapezoid of Excellence", "Interactive Bracket", "AI Analyst"].map(
+          {["Trapezoid of KenPom", "Interactive Bracket", "AI Analyst"].map(
             (label) => (
               <span
                 key={label}

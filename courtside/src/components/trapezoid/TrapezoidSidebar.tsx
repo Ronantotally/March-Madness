@@ -42,9 +42,9 @@ const TIERS: {
 ];
 
 const STORYLINES = [
-  "Louisville is a 6-seed title contender — biggest value pick in the bracket.",
+  "Houston joins title contenders — inside the new tighter trapezoid boundary.",
   "Alabama has the #3 offense but #67 defense — classic upset candidate.",
-  "Iowa, Kentucky, UNC, and Miami are KenPom sleepers outside the trapezoid.",
+  "Michigan St., Louisville fall outside the tighter trapezoid — now KenPom sleepers.",
   "All four 1-seeds are title contenders.",
 ];
 
@@ -74,10 +74,10 @@ export default function TrapezoidSidebar({
           What am I looking at?
         </h2>
         <p className="text-[11px] leading-relaxed text-text-secondary">
-          Every dot is a tournament team. Teams inside the green shape play at a
-          championship level — 6 of the last 6 national champions were inside
-          it. Created by{" "}
-          <span className="text-accent-green">@RyanHammer09</span>.
+          Our Trapezoid of KenPom plots every tournament team by tempo vs
+          efficiency margin using KenPom&apos;s adjusted metrics. Teams inside the
+          green shape play at a championship level — 6 of the last 6 national
+          champions were inside it.
         </p>
       </div>
 

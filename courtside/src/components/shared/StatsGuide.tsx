@@ -156,8 +156,8 @@ export default function StatsGuide() {
                 {/* === THE TWO FRAMEWORKS === */}
                 <Section title="The Two Frameworks">
                   <FrameworkCard
-                    title="Trapezoid of Excellence"
-                    credit="@RyanHammer09"
+                    title="Trapezoid of KenPom"
+                    credit="KenPom-based"
                     description="Teams are plotted by how fast they play (pace) vs how good they are (net rating). Championship-caliber teams fall inside the trapezoid shape. The shape is wider at the top because elite teams can win playing fast or slow — but good-not-great teams need to play at a moderate pace. Every recent national champion was inside the trapezoid."
                   />
                   <FrameworkCard

@@ -47,7 +47,7 @@ function HomeContent() {
         <div className="mb-4 flex items-start gap-3 rounded-lg border border-accent-gold/20 bg-accent-gold/[0.06] px-4 py-3">
           <p className="flex-1 text-xs leading-relaxed text-text-secondary">
             <span className="font-semibold text-accent-gold">
-              The Trapezoid of Excellence
+              The Trapezoid of KenPom
             </span>{" "}
             identifies championship-caliber teams by plotting pace vs
             efficiency.{" "}
@@ -69,7 +69,7 @@ function HomeContent() {
       {/* Header */}
       <div className="mb-4">
         <h1 className="mb-1 text-2xl font-bold tracking-tight text-text-primary">
-          Trapezoid of Excellence
+          Trapezoid of KenPom
         </h1>
         <p className="max-w-2xl text-sm text-text-secondary">
           All 68 tournament teams plotted by pace vs. net rating. Teams inside

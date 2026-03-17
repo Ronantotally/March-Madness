@@ -2,26 +2,24 @@
   "season": "2025-26",
   "lastUpdated": "2026-03-16",
   "dataSource": "KenPom (kenpom.com)",
-  "trapezoidSource": "Ryan Hammer (@RyanHammer09)",
   "trapezoidBoundary": {
     "topLeft": {
-      "pace": 63,
+      "pace": 62,
       "netRtg": 40
     },
     "topRight": {
-      "pace": 72.5,
+      "pace": 73.5,
       "netRtg": 40
     },
     "bottomRight": {
-      "pace": 70.5,
-      "netRtg": 25
+      "pace": 72,
+      "netRtg": 29
     },
     "bottomLeft": {
-      "pace": 65,
-      "netRtg": 25
+      "pace": 63,
+      "netRtg": 29
     },
-    "credit": "@RyanHammer09",
-    "note": "Boundary coordinates calibrated to KenPom AdjEM scale. Shape from Hammer's 2026 chart."
+    "note": "Boundary coordinates calibrated to KenPom AdjEM scale."
   },
   "championshipFormula": {
     "adjORankMax": 25,
@@ -175,8 +173,8 @@
       "sosNetRtgRank": 24,
       "meetsChampFormula": true,
       "meetsExpandedCriteria": true,
-      "insideTrapezoid": false,
-      "tier": "kenpom_sleeper"
+      "insideTrapezoid": true,
+      "tier": "title_contender"
     },
     {
       "kenpomRank": 8,
@@ -217,8 +215,8 @@
       "sosNetRtgRank": 21,
       "meetsChampFormula": true,
       "meetsExpandedCriteria": true,
-      "insideTrapezoid": true,
-      "tier": "title_contender"
+      "insideTrapezoid": false,
+      "tier": "kenpom_sleeper"
     },
     {
       "kenpomRank": 13,
@@ -238,8 +236,8 @@
       "sosNetRtgRank": 70,
       "meetsChampFormula": false,
       "meetsExpandedCriteria": true,
-      "insideTrapezoid": true,
-      "tier": "trapezoid_elite"
+      "insideTrapezoid": false,
+      "tier": "kenpom_sleeper"
     },
     {
       "kenpomRank": 7,
@@ -280,8 +278,8 @@
       "sosNetRtgRank": 87,
       "meetsChampFormula": false,
       "meetsExpandedCriteria": true,
-      "insideTrapezoid": true,
-      "tier": "trapezoid_elite"
+      "insideTrapezoid": false,
+      "tier": "kenpom_sleeper"
     },
     {
       "kenpomRank": 21,
@@ -343,8 +341,8 @@
       "sosNetRtgRank": 42,
       "meetsChampFormula": false,
       "meetsExpandedCriteria": false,
-      "insideTrapezoid": true,
-      "tier": "trapezoid_team"
+      "insideTrapezoid": false,
+      "tier": "long_shot"
     },
     {
       "kenpomRank": 15,
@@ -385,8 +383,8 @@
       "sosNetRtgRank": 43,
       "meetsChampFormula": false,
       "meetsExpandedCriteria": false,
-      "insideTrapezoid": true,
-      "tier": "trapezoid_team"
+      "insideTrapezoid": false,
+      "tier": "long_shot"
     },
     {
       "kenpomRank": 20,
@@ -406,8 +404,8 @@
       "sosNetRtgRank": 8,
       "meetsChampFormula": false,
       "meetsExpandedCriteria": true,
-      "insideTrapezoid": true,
-      "tier": "trapezoid_elite"
+      "insideTrapezoid": false,
+      "tier": "kenpom_sleeper"
     },
     {
       "kenpomRank": 12,
@@ -427,8 +425,8 @@
       "sosNetRtgRank": 13,
       "meetsChampFormula": false,
       "meetsExpandedCriteria": true,
-      "insideTrapezoid": true,
-      "tier": "trapezoid_elite"
+      "insideTrapezoid": false,
+      "tier": "kenpom_sleeper"
     },
     {
       "kenpomRank": 22,
@@ -469,8 +467,8 @@
       "sosNetRtgRank": 30,
       "meetsChampFormula": true,
       "meetsExpandedCriteria": true,
-      "insideTrapezoid": true,
-      "tier": "title_contender"
+      "insideTrapezoid": false,
+      "tier": "kenpom_sleeper"
     },
     {
       "kenpomRank": 16,
@@ -490,8 +488,8 @@
       "sosNetRtgRank": 11,
       "meetsChampFormula": false,
       "meetsExpandedCriteria": true,
-      "insideTrapezoid": true,
-      "tier": "trapezoid_elite"
+      "insideTrapezoid": false,
+      "tier": "kenpom_sleeper"
     },
     {
       "kenpomRank": 29,

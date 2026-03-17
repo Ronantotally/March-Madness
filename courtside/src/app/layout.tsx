@@ -23,8 +23,8 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000"),
   title: "Courtside — March Madness Analytics 2026",
   description:
-    "Trapezoid of Excellence analysis and interactive bracket builder for the 2026 NCAA Tournament. Powered by real KenPom data and AI-driven insights.",
-  keywords: ["March Madness", "NCAA Tournament", "Bracket Builder", "KenPom", "Trapezoid of Excellence", "2026"],
+    "Trapezoid of KenPom analysis and interactive bracket builder for the 2026 NCAA Tournament. Powered by real KenPom data and AI-driven insights.",
+  keywords: ["March Madness", "NCAA Tournament", "Bracket Builder", "KenPom", "Trapezoid of KenPom", "2026"],
   authors: [{ name: "Courtside" }],
   openGraph: {
     title: "Courtside — March Madness Analytics 2026",

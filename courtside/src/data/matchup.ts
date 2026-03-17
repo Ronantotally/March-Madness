@@ -166,9 +166,9 @@ function generateKeyFactors(
 
   // Trapezoid alignment
   if (teamA.insideTrapezoid && !teamB.insideTrapezoid) {
-    factors.push(`${teamA.name} inside Trapezoid of Excellence; ${teamB.name} outside`);
+    factors.push(`${teamA.name} inside Trapezoid of KenPom; ${teamB.name} outside`);
   } else if (teamB.insideTrapezoid && !teamA.insideTrapezoid) {
-    factors.push(`${teamB.name} inside Trapezoid of Excellence; ${teamA.name} outside`);
+    factors.push(`${teamB.name} inside Trapezoid of KenPom; ${teamA.name} outside`);
   }
 
   // Championship formula

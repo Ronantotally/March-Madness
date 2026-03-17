@@ -352,18 +352,7 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
           letterSpacing="2"
           style={{ textTransform: "uppercase" } as React.CSSProperties}
         >
-          TRAPEZOID OF EXCELLENCE
-        </text>
-        <text
-          x={xScale(vertices[1].pace) + 4}
-          y={yScale(vertices[1].netRtg) + 4}
-          textAnchor="start"
-          fill="#2EC4B6"
-          fillOpacity={0.3}
-          fontSize={9}
-          fontFamily="var(--font-mono)"
-        >
-          @RyanHammer09
+          TRAPEZOID OF KENPOM
         </text>
 
         {/* Glow filter for title contenders */}
