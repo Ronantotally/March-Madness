@@ -2,11 +2,12 @@
 
 import { Suspense, useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { Triangle, TrendingUp, Shield } from "lucide-react";
+import { Triangle, TrendingUp, Shield, X } from "lucide-react";
 import TrapezoidChart, { FilterMode } from "@/components/trapezoid/TrapezoidChart";
 import ChartFilters from "@/components/trapezoid/ChartFilters";
-import ChartLegend from "@/components/trapezoid/ChartLegend";
+import TrapezoidSidebar from "@/components/trapezoid/TrapezoidSidebar";
 import { getAllTeams } from "@/data/teamUtils";
+import { TeamTier } from "@/types";
 
 function HomeContent() {
   const searchParams = useSearchParams();
@@ -14,6 +15,8 @@ function HomeContent() {
   const [filterRegion, setFilterRegion] = useState("East");
   const [filterSeedRange, setFilterSeedRange] = useState<[number, number]>([1, 4]);
   const [highlightedTeam, setHighlightedTeam] = useState<string | null>(null);
+  const [activeTier, setActiveTier] = useState<TeamTier | null>(null);
+  const [bannerDismissed, setBannerDismissed] = useState(false);
 
   // Handle ?team= query param for cross-page navigation
   useEffect(() => {
@@ -33,10 +36,38 @@ function HomeContent() {
     (t) => t.insideTrapezoid && t.meetsChampFormula
   ).length;
 
+  const handleTierToggle = (tier: TeamTier) => {
+    setActiveTier((prev) => (prev === tier ? null : tier));
+  };
+
   return (
     <div className="mx-auto max-w-7xl px-3 py-4 sm:px-4 sm:py-8">
+      {/* First-visit banner */}
+      {!bannerDismissed && (
+        <div className="mb-4 flex items-start gap-3 rounded-lg border border-accent-gold/20 bg-accent-gold/[0.06] px-4 py-3">
+          <p className="flex-1 text-xs leading-relaxed text-text-secondary">
+            <span className="font-semibold text-accent-gold">
+              The Trapezoid of Excellence
+            </span>{" "}
+            identifies championship-caliber teams by plotting pace vs
+            efficiency.{" "}
+            <span className="text-text-primary">
+              Gold dots are your safest bracket picks.
+            </span>{" "}
+            Click any team to see their full profile.
+          </p>
+          <button
+            onClick={() => setBannerDismissed(true)}
+            className="mt-0.5 flex-shrink-0 rounded p-0.5 text-text-secondary transition-colors hover:text-text-primary"
+            aria-label="Dismiss banner"
+          >
+            <X size={14} />
+          </button>
+        </div>
+      )}
+
       {/* Header */}
-      <div className="mb-6">
+      <div className="mb-4">
         <h1 className="mb-1 text-2xl font-bold tracking-tight text-text-primary">
           Trapezoid of Excellence
         </h1>
@@ -50,7 +81,10 @@ function HomeContent() {
       <div className="mb-4 rounded-lg border border-border bg-surface px-4 py-2.5">
         <ChartFilters
           filter={filter}
-          onFilterChange={setFilter}
+          onFilterChange={(mode) => {
+            setFilter(mode);
+            setActiveTier(null);
+          }}
           filterRegion={filterRegion}
           onRegionChange={setFilterRegion}
           filterSeedRange={filterSeedRange}
@@ -58,19 +92,28 @@ function HomeContent() {
         />
       </div>
 
-      {/* Chart */}
-      <div className="mb-4 overflow-hidden rounded-xl border border-border bg-surface p-4">
-        <TrapezoidChart
-          filter={filter}
-          filterRegion={filterRegion}
-          filterSeedRange={filterSeedRange}
-          highlightedTeam={highlightedTeam}
+      {/* Sidebar + Chart layout */}
+      <div className="mb-4 flex flex-col gap-4 lg:flex-row">
+        {/* Sidebar — collapses to horizontal strip on mobile */}
+        <TrapezoidSidebar
+          activeTier={activeTier}
+          onTierToggle={handleTierToggle}
         />
+
+        {/* Chart */}
+        <div className="flex-1 overflow-hidden rounded-xl border border-border bg-surface p-4">
+          <TrapezoidChart
+            filter={filter}
+            filterRegion={filterRegion}
+            filterSeedRange={filterSeedRange}
+            highlightedTeam={highlightedTeam}
+            tierFilter={activeTier}
+          />
+        </div>
       </div>
 
-      {/* Legend */}
-      <div className="mb-6 flex items-center justify-between rounded-lg border border-border bg-surface px-4 py-2.5">
-        <ChartLegend />
+      {/* Data attribution */}
+      <div className="mb-6 flex items-center justify-end">
         <span className="font-mono text-[10px] text-text-secondary/40">
           Data: kenpom.com · {teams.length} teams
         </span>

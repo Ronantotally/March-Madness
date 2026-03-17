@@ -55,9 +55,10 @@ interface Props {
   filterRegion?: string;
   filterSeedRange?: [number, number];
   highlightedTeam?: string | null;
+  tierFilter?: TeamTier | null;
 }
 
-export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, highlightedTeam }: Props) {
+export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, highlightedTeam, tierFilter }: Props) {
   const allTeams = useMemo(() => getAllTeams(), []);
   const vertices = useMemo(() => getTrapezoidVertices(), []);
   const [hoveredTeam, setHoveredTeam] = useState<Team | null>(null);
@@ -95,10 +96,15 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
   }, [allTeams, filter, filterRegion, filterSeedRange]);
 
   const dimmedTeams = useMemo(() => {
-    if (filter === "all") return new Set<string>();
-    const active = new Set(filteredTeams.map((t) => t.name));
+    if (filter === "all" && !tierFilter) return new Set<string>();
+    let active: Set<string>;
+    if (tierFilter) {
+      active = new Set(allTeams.filter((t) => t.tier === tierFilter).map((t) => t.name));
+    } else {
+      active = new Set(filteredTeams.map((t) => t.name));
+    }
     return new Set(allTeams.filter((t) => !active.has(t.name)).map((t) => t.name));
-  }, [allTeams, filteredTeams, filter]);
+  }, [allTeams, filteredTeams, filter, tierFilter]);
 
   // Trapezoid polygon path
   const trapezoidPath = useMemo(() => {
@@ -210,24 +216,118 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
         {/* Axis titles */}
         <text
           x={MARGIN.left + INNER_W / 2}
-          y={CHART_H - 8}
+          y={CHART_H - 6}
           textAnchor="middle"
           fill="#8a8f98"
-          fontSize={12}
+          fontSize={11}
           fontFamily="var(--font-sans)"
         >
-          Adj. Tempo (Pace)
+          {"Pace (Possessions per game) →"}
         </text>
+        {/* Slower / Faster edge labels */}
+        <text
+          x={MARGIN.left + 4}
+          y={CHART_H - MARGIN.bottom + 34}
+          textAnchor="start"
+          fill="#555a64"
+          fontSize={9}
+          fontFamily="var(--font-sans)"
+        >
+          ← Slower
+        </text>
+        <text
+          x={CHART_W - MARGIN.right - 4}
+          y={CHART_H - MARGIN.bottom + 34}
+          textAnchor="end"
+          fill="#555a64"
+          fontSize={9}
+          fontFamily="var(--font-sans)"
+        >
+          Faster →
+        </text>
+        {/* Y-axis title */}
         <text
           x={16}
           y={MARGIN.top + INNER_H / 2}
           textAnchor="middle"
           fill="#8a8f98"
-          fontSize={12}
+          fontSize={11}
           fontFamily="var(--font-sans)"
           transform={`rotate(-90, 16, ${MARGIN.top + INNER_H / 2})`}
         >
-          Adj. Efficiency Margin (AdjEM)
+          {"↑ Net Rating (Points better than average)"}
+        </text>
+        {/* Elite / Weaker edge labels */}
+        <text
+          x={MARGIN.left - 14}
+          y={MARGIN.top + 4}
+          textAnchor="end"
+          fill="#555a64"
+          fontSize={9}
+          fontFamily="var(--font-sans)"
+        >
+          Elite
+        </text>
+        <text
+          x={MARGIN.left - 14}
+          y={CHART_H - MARGIN.bottom - 4}
+          textAnchor="end"
+          fill="#555a64"
+          fontSize={9}
+          fontFamily="var(--font-sans)"
+        >
+          Weaker
+        </text>
+
+        {/* Zone labels — subtle contextual text */}
+        <text
+          x={(xScale(X_MIN + (X_MAX - X_MIN) * 0.5))}
+          y={yScale(Y_MAX * 0.72)}
+          textAnchor="middle"
+          fill="#555a64"
+          fillOpacity={0.5}
+          fontSize={10}
+          fontFamily="var(--font-sans)"
+          letterSpacing="1.5"
+          pointerEvents="none"
+        >
+          TITLE CONTENDERS
+        </text>
+        <text
+          x={xScale(X_MIN + (X_MAX - X_MIN) * 0.12)}
+          y={yScale(Y_MAX * 0.15)}
+          textAnchor="middle"
+          fill="#555a64"
+          fillOpacity={0.35}
+          fontSize={9}
+          fontFamily="var(--font-sans)"
+          pointerEvents="none"
+        >
+          Slow &amp; limited
+        </text>
+        <text
+          x={xScale(X_MIN + (X_MAX - X_MIN) * 0.88)}
+          y={yScale(Y_MAX * 0.15)}
+          textAnchor="middle"
+          fill="#555a64"
+          fillOpacity={0.35}
+          fontSize={9}
+          fontFamily="var(--font-sans)"
+          pointerEvents="none"
+        >
+          Fast but vulnerable
+        </text>
+        <text
+          x={xScale(X_MIN + (X_MAX - X_MIN) * 0.5)}
+          y={yScale(Y_MIN * 0.5)}
+          textAnchor="middle"
+          fill="#555a64"
+          fillOpacity={0.3}
+          fontSize={9}
+          fontFamily="var(--font-sans)"
+          pointerEvents="none"
+        >
+          Outmatched
         </text>
 
         {/* Trapezoid fill */}
