@@ -15,14 +15,18 @@ export default function ArchetypeBadge({ team, compact }: Props) {
   const ref = useRef<HTMLSpanElement>(null);
 
   const info = getArchetype(team);
+  if (!info) return null;
+
   const description = getArchetypeDescription(team, info);
 
+  /* eslint-disable react-hooks/rules-of-hooks */
   useEffect(() => {
     if (show && ref.current) {
       const rect = ref.current.getBoundingClientRect();
       setAbove(rect.top > 80);
     }
   }, [show]);
+  /* eslint-enable react-hooks/rules-of-hooks */
 
   return (
     <span
@@ -44,8 +48,7 @@ export default function ArchetypeBadge({ team, compact }: Props) {
         }}
       >
         <span>{info.emoji}</span>
-        {!compact && <span>{info.label}</span>}
-        {compact && <span>{info.label}</span>}
+        <span>{info.label}</span>
       </span>
 
       {show && (

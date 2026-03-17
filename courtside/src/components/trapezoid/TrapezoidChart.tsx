@@ -487,6 +487,7 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
             </div>
             {(() => {
               const arch = getArchetype(hoveredTeam);
+              if (!arch) return null;
               return (
                 <div className="mt-1">
                   <span

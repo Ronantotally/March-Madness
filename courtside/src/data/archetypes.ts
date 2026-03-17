@@ -109,8 +109,8 @@ const ARCHETYPE_MAP: Record<Archetype, ArchetypeInfo> = {
   },
 };
 
-export function getArchetype(team: Team): ArchetypeInfo {
-  let key: Archetype;
+export function getArchetype(team: Team): ArchetypeInfo | null {
+  let key: Archetype | null = null;
 
   if (team.dRtgRank <= 10) {
     key = "defensive_fortress";
@@ -138,11 +138,9 @@ export function getArchetype(team: Team): ArchetypeInfo {
     key = "mid_major_menace";
   } else if (team.seed >= 13) {
     key = "cinderella";
-  } else {
-    key = "wild_card";
   }
 
-  return ARCHETYPE_MAP[key];
+  return key ? ARCHETYPE_MAP[key] : null;
 }
 
 export function getArchetypeDescription(team: Team, info: ArchetypeInfo): string {

@@ -46,6 +46,7 @@ function RiskGauge({ probability, color }: { probability: number; color: string 
 function generateUpsetReason(higher: Team, lower: Team): string {
   const adjEMGap = higher.netRtg - lower.netRtg;
   const lowerArch = getArchetype(lower);
+  const archLabel = lowerArch?.label ?? "their";
 
   // Lower seed is actually the better KenPom team
   if (lower.kenpomRank < higher.kenpomRank) {
@@ -59,10 +60,10 @@ function generateUpsetReason(higher: Team, lower: Team): string {
 
   // Lower seed has elite offense or defense
   if (lower.oRtgRank <= 15) {
-    return `${lower.name} has the #${lower.oRtgRank} offense in the country. ${lowerArch.label} identity can torch anyone.`;
+    return `${lower.name} has the #${lower.oRtgRank} offense in the country. ${archLabel} identity can torch anyone.`;
   }
   if (lower.dRtgRank <= 15) {
-    return `${lower.name} has the #${lower.dRtgRank} defense. ${lowerArch.label} style grinds favorites into upsets.`;
+    return `${lower.name} has the #${lower.dRtgRank} defense. ${archLabel} style grinds favorites into upsets.`;
   }
 
   // Lower seed inside trapezoid
