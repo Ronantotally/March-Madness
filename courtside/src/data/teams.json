@@ -5,20 +5,20 @@
   "trapezoidSource": "Ryan Hammer (@RyanHammer09)",
   "trapezoidBoundary": {
     "topLeft": {
-      "pace": 62.0,
-      "netRtg": 40.0
+      "pace": 63,
+      "netRtg": 40
     },
     "topRight": {
-      "pace": 73.5,
-      "netRtg": 40.0
+      "pace": 72.5,
+      "netRtg": 40
     },
     "bottomRight": {
-      "pace": 72.5,
-      "netRtg": 25.0
+      "pace": 70.5,
+      "netRtg": 25
     },
     "bottomLeft": {
-      "pace": 62.0,
-      "netRtg": 14.0
+      "pace": 65,
+      "netRtg": 25
     },
     "credit": "@RyanHammer09",
     "note": "Boundary coordinates calibrated to KenPom AdjEM scale. Shape from Hammer's 2026 chart."
@@ -37,7 +37,7 @@
       "conference": "ACC",
       "record": "32-2",
       "netRtg": 38.9,
-      "oRtg": 128.0,
+      "oRtg": 128,
       "oRtgRank": 4,
       "dRtg": 89.1,
       "dRtgRank": 2,
@@ -60,7 +60,7 @@
       "netRtg": 37.59,
       "oRtg": 126.6,
       "oRtgRank": 8,
-      "dRtg": 89.0,
+      "dRtg": 89,
       "dRtgRank": 1,
       "adjT": 70.9,
       "adjTRank": 22,
@@ -102,7 +102,7 @@
       "netRtg": 37.66,
       "oRtg": 127.7,
       "oRtgRank": 5,
-      "dRtg": 90.0,
+      "dRtg": 90,
       "dRtgRank": 3,
       "adjT": 69.8,
       "adjTRank": 54,
@@ -121,7 +121,7 @@
       "conference": "Big East",
       "record": "29-5",
       "netRtg": 27.87,
-      "oRtg": 122.0,
+      "oRtg": 122,
       "oRtgRank": 30,
       "dRtg": 94.1,
       "dRtgRank": 11,
@@ -133,8 +133,8 @@
       "sosNetRtgRank": 36,
       "meetsChampFormula": false,
       "meetsExpandedCriteria": true,
-      "insideTrapezoid": true,
-      "tier": "trapezoid_elite"
+      "insideTrapezoid": false,
+      "tier": "kenpom_sleeper"
     },
     {
       "kenpomRank": 6,
@@ -175,8 +175,8 @@
       "sosNetRtgRank": 24,
       "meetsChampFormula": true,
       "meetsExpandedCriteria": true,
-      "insideTrapezoid": true,
-      "tier": "title_contender"
+      "insideTrapezoid": false,
+      "tier": "kenpom_sleeper"
     },
     {
       "kenpomRank": 8,
@@ -205,11 +205,11 @@
       "conference": "Big Ten",
       "record": "25-7",
       "netRtg": 28.31,
-      "oRtg": 123.0,
+      "oRtg": 123,
       "oRtgRank": 24,
       "dRtg": 94.7,
       "dRtgRank": 13,
-      "adjT": 66.0,
+      "adjT": 66,
       "adjTRank": 252,
       "luck": 0.005,
       "seed": 3,
@@ -268,7 +268,7 @@
       "conference": "WCC",
       "record": "30-3",
       "netRtg": 28.1,
-      "oRtg": 122.0,
+      "oRtg": 122,
       "oRtgRank": 29,
       "dRtg": 93.9,
       "dRtgRank": 9,
@@ -301,8 +301,8 @@
       "sosNetRtgRank": 1,
       "meetsChampFormula": false,
       "meetsExpandedCriteria": false,
-      "insideTrapezoid": true,
-      "tier": "trapezoid_team"
+      "insideTrapezoid": false,
+      "tier": "long_shot"
     },
     {
       "kenpomRank": 18,
@@ -310,7 +310,7 @@
       "conference": "SEC",
       "record": "23-9",
       "netRtg": 25.72,
-      "oRtg": 129.0,
+      "oRtg": 129,
       "oRtgRank": 3,
       "dRtg": 103.3,
       "dRtgRank": 67,
@@ -356,7 +356,7 @@
       "oRtgRank": 6,
       "dRtg": 101.6,
       "dRtgRank": 48,
-      "adjT": 71.0,
+      "adjT": 71,
       "adjTRank": 20,
       "luck": 0.051,
       "seed": 4,
@@ -364,8 +364,8 @@
       "sosNetRtgRank": 10,
       "meetsChampFormula": false,
       "meetsExpandedCriteria": false,
-      "insideTrapezoid": true,
-      "tier": "trapezoid_team"
+      "insideTrapezoid": false,
+      "tier": "long_shot"
     },
     {
       "kenpomRank": 17,
@@ -394,7 +394,7 @@
       "conference": "Big 12",
       "record": "22-10",
       "netRtg": 25.22,
-      "oRtg": 125.0,
+      "oRtg": 125,
       "oRtgRank": 12,
       "dRtg": 99.8,
       "dRtgRank": 33,
@@ -438,7 +438,7 @@
       "netRtg": 23.39,
       "oRtg": 125.3,
       "oRtgRank": 11,
-      "dRtg": 102.0,
+      "dRtg": 102,
       "dRtgRank": 51,
       "adjT": 68.7,
       "adjTRank": 104,
@@ -448,8 +448,8 @@
       "sosNetRtgRank": 18,
       "meetsChampFormula": false,
       "meetsExpandedCriteria": false,
-      "insideTrapezoid": true,
-      "tier": "trapezoid_team"
+      "insideTrapezoid": false,
+      "tier": "long_shot"
     },
     {
       "kenpomRank": 19,
@@ -480,9 +480,9 @@
       "netRtg": 26.02,
       "oRtg": 121.1,
       "oRtgRank": 37,
-      "dRtg": 95.0,
+      "dRtg": 95,
       "dRtgRank": 15,
-      "adjT": 65.0,
+      "adjT": 65,
       "adjTRank": 307,
       "luck": -0.06,
       "seed": 6,
@@ -511,8 +511,8 @@
       "sosNetRtgRank": 45,
       "meetsChampFormula": false,
       "meetsExpandedCriteria": true,
-      "insideTrapezoid": true,
-      "tier": "trapezoid_elite"
+      "insideTrapezoid": false,
+      "tier": "kenpom_sleeper"
     },
     {
       "kenpomRank": 23,
@@ -532,8 +532,8 @@
       "sosNetRtgRank": 16,
       "meetsChampFormula": false,
       "meetsExpandedCriteria": false,
-      "insideTrapezoid": true,
-      "tier": "trapezoid_team"
+      "insideTrapezoid": false,
+      "tier": "long_shot"
     },
     {
       "kenpomRank": 27,
@@ -553,8 +553,8 @@
       "sosNetRtgRank": 33,
       "meetsChampFormula": false,
       "meetsExpandedCriteria": false,
-      "insideTrapezoid": true,
-      "tier": "trapezoid_team"
+      "insideTrapezoid": false,
+      "tier": "long_shot"
     },
     {
       "kenpomRank": 28,
@@ -564,7 +564,7 @@
       "netRtg": 21.48,
       "oRtg": 120.5,
       "oRtgRank": 39,
-      "dRtg": 99.0,
+      "dRtg": 99,
       "dRtgRank": 27,
       "adjT": 68.3,
       "adjTRank": 124,
@@ -574,8 +574,8 @@
       "sosNetRtgRank": 6,
       "meetsChampFormula": false,
       "meetsExpandedCriteria": true,
-      "insideTrapezoid": true,
-      "tier": "trapezoid_elite"
+      "insideTrapezoid": false,
+      "tier": "kenpom_sleeper"
     },
     {
       "kenpomRank": 24,
@@ -595,8 +595,8 @@
       "sosNetRtgRank": 93,
       "meetsChampFormula": false,
       "meetsExpandedCriteria": false,
-      "insideTrapezoid": true,
-      "tier": "trapezoid_team"
+      "insideTrapezoid": false,
+      "tier": "long_shot"
     },
     {
       "kenpomRank": 31,
@@ -616,8 +616,8 @@
       "sosNetRtgRank": 77,
       "meetsChampFormula": false,
       "meetsExpandedCriteria": true,
-      "insideTrapezoid": true,
-      "tier": "trapezoid_elite"
+      "insideTrapezoid": false,
+      "tier": "kenpom_sleeper"
     },
     {
       "kenpomRank": 26,
@@ -637,8 +637,8 @@
       "sosNetRtgRank": 22,
       "meetsChampFormula": false,
       "meetsExpandedCriteria": false,
-      "insideTrapezoid": true,
-      "tier": "trapezoid_team"
+      "insideTrapezoid": false,
+      "tier": "long_shot"
     },
     {
       "kenpomRank": 32,
@@ -679,8 +679,8 @@
       "sosNetRtgRank": 65,
       "meetsChampFormula": false,
       "meetsExpandedCriteria": false,
-      "insideTrapezoid": true,
-      "tier": "trapezoid_team"
+      "insideTrapezoid": false,
+      "tier": "long_shot"
     },
     {
       "kenpomRank": 33,
@@ -700,8 +700,8 @@
       "sosNetRtgRank": 67,
       "meetsChampFormula": false,
       "meetsExpandedCriteria": false,
-      "insideTrapezoid": true,
-      "tier": "trapezoid_team"
+      "insideTrapezoid": false,
+      "tier": "long_shot"
     },
     {
       "kenpomRank": 43,
@@ -734,7 +734,7 @@
       "oRtgRank": 51,
       "dRtg": 101.2,
       "dRtgRank": 42,
-      "adjT": 71.0,
+      "adjT": 71,
       "adjTRank": 21,
       "luck": 0.03,
       "seed": 9,
@@ -755,7 +755,7 @@
       "oRtgRank": 31,
       "dRtg": 99.3,
       "dRtgRank": 30,
-      "adjT": 63.0,
+      "adjT": 63,
       "adjTRank": 357,
       "luck": -0.061,
       "seed": 9,
@@ -763,8 +763,8 @@
       "sosNetRtgRank": 47,
       "meetsChampFormula": false,
       "meetsExpandedCriteria": true,
-      "insideTrapezoid": true,
-      "tier": "trapezoid_elite"
+      "insideTrapezoid": false,
+      "tier": "kenpom_sleeper"
     },
     {
       "kenpomRank": 30,
@@ -784,8 +784,8 @@
       "sosNetRtgRank": 80,
       "meetsChampFormula": false,
       "meetsExpandedCriteria": false,
-      "insideTrapezoid": true,
-      "tier": "trapezoid_team"
+      "insideTrapezoid": false,
+      "tier": "long_shot"
     },
     {
       "kenpomRank": 54,
@@ -837,7 +837,7 @@
       "netRtg": 18.67,
       "oRtg": 119.7,
       "oRtgRank": 49,
-      "dRtg": 101.0,
+      "dRtg": 101,
       "dRtgRank": 41,
       "adjT": 70.5,
       "adjTRank": 29,
@@ -982,7 +982,7 @@
       "conference": "SEC",
       "record": "18-14",
       "netRtg": 19.03,
-      "oRtg": 125.0,
+      "oRtg": 125,
       "oRtgRank": 13,
       "dRtg": 105.9,
       "dRtgRank": 112,
@@ -1003,7 +1003,7 @@
       "conference": "MVC",
       "record": "23-12",
       "netRtg": 11.81,
-      "oRtg": 110.0,
+      "oRtg": 110,
       "oRtgRank": 153,
       "dRtg": 98.2,
       "dRtgRank": 24,
@@ -1026,7 +1026,7 @@
       "netRtg": 12.8,
       "oRtg": 118.8,
       "oRtgRank": 54,
-      "dRtg": 106.0,
+      "dRtg": 106,
       "dRtgRank": 113,
       "adjT": 70.3,
       "adjTRank": 32,
@@ -1066,7 +1066,7 @@
       "conference": "Big South",
       "record": "30-4",
       "netRtg": 8.4,
-      "oRtg": 117.0,
+      "oRtg": 117,
       "oRtgRank": 66,
       "dRtg": 108.6,
       "dRtgRank": 161,
@@ -1131,7 +1131,7 @@
       "netRtg": 1.72,
       "oRtg": 110.7,
       "oRtgRank": 141,
-      "dRtg": 109.0,
+      "dRtg": 109,
       "dRtgRank": 166,
       "adjT": 64.9,
       "adjTRank": 309,
@@ -1194,7 +1194,7 @@
       "netRtg": 2.17,
       "oRtg": 112.1,
       "oRtgRank": 117,
-      "dRtg": 110.0,
+      "dRtg": 110,
       "dRtgRank": 193,
       "adjT": 67.2,
       "adjTRank": 192,
@@ -1217,7 +1217,7 @@
       "oRtgRank": 204,
       "dRtg": 105.9,
       "dRtgRank": 111,
-      "adjT": 69.0,
+      "adjT": 69,
       "adjTRank": 87,
       "luck": 0.068,
       "seed": 14,
@@ -1385,7 +1385,7 @@
       "oRtgRank": 283,
       "dRtg": 106.3,
       "dRtgRank": 117,
-      "adjT": 69.0,
+      "adjT": 69,
       "adjTRank": 89,
       "luck": -0.01,
       "seed": 16,

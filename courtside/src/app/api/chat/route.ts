@@ -137,15 +137,19 @@ function executeToolCall(name: string, input: Record<string, string>): string {
         title_contender: [],
         trapezoid_elite: [],
         trapezoid_team: [],
+        kenpom_sleeper: [],
         long_shot: [],
       };
       for (const t of data.teams) {
-        tiers[t.tier].push({ name: t.name, seed: t.seed, kenpomRank: t.kenpomRank, netRtg: t.netRtg, region: t.region });
+        if (tiers[t.tier]) {
+          tiers[t.tier].push({ name: t.name, seed: t.seed, kenpomRank: t.kenpomRank, netRtg: t.netRtg, region: t.region });
+        }
       }
       return JSON.stringify({
         title_contenders: { count: tiers.title_contender.length, teams: tiers.title_contender },
         trapezoid_elite: { count: tiers.trapezoid_elite.length, teams: tiers.trapezoid_elite },
         trapezoid_team: { count: tiers.trapezoid_team.length, teams: tiers.trapezoid_team },
+        kenpom_sleeper: { count: tiers.kenpom_sleeper.length, teams: tiers.kenpom_sleeper },
         long_shot: { count: tiers.long_shot.length, teams: tiers.long_shot },
       }, null, 2);
     }

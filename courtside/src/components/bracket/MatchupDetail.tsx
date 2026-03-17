@@ -12,6 +12,7 @@ const TIER_COLORS: Record<TeamTier, string> = {
   title_contender: "#F5A623",
   trapezoid_elite: "#2EC4B6",
   trapezoid_team: "#0891B2",
+  kenpom_sleeper: "#8B5CF6",
   long_shot: "#4a4f5a",
 };
 

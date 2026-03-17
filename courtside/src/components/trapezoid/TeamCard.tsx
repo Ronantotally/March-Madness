@@ -9,6 +9,7 @@ const TIER_COLORS: Record<TeamTier, string> = {
   title_contender: "#F5A623",
   trapezoid_elite: "#2EC4B6",
   trapezoid_team: "#0891B2",
+  kenpom_sleeper: "#8B5CF6",
   long_shot: "#4a4f5a",
 };
 
@@ -16,6 +17,7 @@ const TIER_LABELS: Record<TeamTier, string> = {
   title_contender: "Title Contender",
   trapezoid_elite: "Trapezoid Elite",
   trapezoid_team: "Trapezoid Team",
+  kenpom_sleeper: "KenPom Sleeper",
   long_shot: "Long Shot",
 };
 
@@ -23,6 +25,7 @@ const TIER_VERDICTS: Record<TeamTier, string> = {
   title_contender: "Elite profile — meets both Trapezoid and full championship formula.",
   trapezoid_elite: "Strong contender — inside the Trapezoid with solid KenPom credentials.",
   trapezoid_team: "Fringe contender — inside the Trapezoid but weaker overall KenPom profile.",
+  kenpom_sleeper: "Outside the Trapezoid but strong KenPom profile — could surprise in March.",
   long_shot: "Outside both frameworks — would need a historic run to cut down the nets.",
 };
 

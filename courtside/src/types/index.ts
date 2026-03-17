@@ -1,4 +1,4 @@
-export type TeamTier = "title_contender" | "trapezoid_elite" | "trapezoid_team" | "long_shot";
+export type TeamTier = "title_contender" | "trapezoid_elite" | "trapezoid_team" | "kenpom_sleeper" | "long_shot";
 
 export interface Team {
   kenpomRank: number;

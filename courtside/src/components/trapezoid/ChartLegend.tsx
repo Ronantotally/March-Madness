@@ -8,6 +8,7 @@ const TIERS: { key: TeamTier; label: string; color: string }[] = [
   { key: "title_contender", label: "Title Contender", color: "#F5A623" },
   { key: "trapezoid_elite", label: "Trapezoid Elite", color: "#2EC4B6" },
   { key: "trapezoid_team", label: "Trapezoid Team", color: "#0891B2" },
+  { key: "kenpom_sleeper", label: "KenPom Sleeper", color: "#8B5CF6" },
   { key: "long_shot", label: "Long Shot", color: "#4a4f5a" },
 ];
 

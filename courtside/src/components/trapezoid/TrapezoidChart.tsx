@@ -12,6 +12,7 @@ const TIER_COLORS: Record<TeamTier, string> = {
   title_contender: "#F5A623",
   trapezoid_elite: "#2EC4B6",
   trapezoid_team: "#0891B2",
+  kenpom_sleeper: "#8B5CF6",
   long_shot: "#4a4f5a",
 };
 
@@ -19,6 +20,7 @@ const TIER_LABELS: Record<TeamTier, string> = {
   title_contender: "Title Contender",
   trapezoid_elite: "Trapezoid Elite",
   trapezoid_team: "Trapezoid Team",
+  kenpom_sleeper: "KenPom Sleeper",
   long_shot: "Long Shot",
 };
 
@@ -284,9 +286,10 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
           .sort((a, b) => {
             const order: Record<TeamTier, number> = {
               long_shot: 0,
-              trapezoid_team: 1,
-              trapezoid_elite: 2,
-              title_contender: 3,
+              kenpom_sleeper: 1,
+              trapezoid_team: 2,
+              trapezoid_elite: 3,
+              title_contender: 4,
             };
             return order[a.tier] - order[b.tier];
           })
