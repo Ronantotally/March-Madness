@@ -10,15 +10,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "#0a0b0f",
-        surface: "#12141a",
-        border: "#1e2028",
-        "text-primary": "#e8e9ed",
-        "text-secondary": "#8a8f98",
-        "accent-gold": "#F5A623",
-        "accent-green": "#2EC4B6",
-        "accent-orange": "#FF6B35",
-        "accent-red": "#E63946",
+        background: "rgb(var(--bg) / <alpha-value>)",
+        surface: "rgb(var(--surface) / <alpha-value>)",
+        border: "rgb(var(--border) / <alpha-value>)",
+        "text-primary": "rgb(var(--text-1) / <alpha-value>)",
+        "text-secondary": "rgb(var(--text-2) / <alpha-value>)",
+        "accent-gold": "rgb(var(--gold) / <alpha-value>)",
+        "accent-green": "rgb(var(--green) / <alpha-value>)",
+        "accent-orange": "rgb(var(--orange) / <alpha-value>)",
+        "accent-red": "rgb(var(--red) / <alpha-value>)",
       },
       fontFamily: {
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],

@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Triangle, GitBranch } from "lucide-react";
+import { Triangle, GitBranch, Sun, Moon } from "lucide-react";
+import { useTheme } from "./ThemeContext";
 
 const tabs = [
   { href: "/", label: "Trapezoid", icon: Triangle },
@@ -11,6 +12,7 @@ const tabs = [
 
 export default function Nav() {
   const pathname = usePathname();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <header className="sticky top-0 z-30 border-b border-border bg-surface/80 backdrop-blur-md">
@@ -28,34 +30,44 @@ export default function Nav() {
           </span>
         </Link>
 
-        {/* Tab navigation */}
-        <nav className="flex items-center gap-1">
-          {tabs.map((tab) => {
-            const isActive =
-              tab.href === "/"
-                ? pathname === "/"
-                : pathname.startsWith(tab.href);
-            const Icon = tab.icon;
+        {/* Tab navigation + theme toggle */}
+        <div className="flex items-center gap-1">
+          <nav className="flex items-center gap-1">
+            {tabs.map((tab) => {
+              const isActive =
+                tab.href === "/"
+                  ? pathname === "/"
+                  : pathname.startsWith(tab.href);
+              const Icon = tab.icon;
 
-            return (
-              <Link
-                key={tab.href}
-                href={tab.href}
-                className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
-                  isActive
-                    ? "bg-background text-text-primary"
-                    : "text-text-secondary hover:text-text-primary"
-                }`}
-              >
-                <Icon size={14} />
-                {tab.label}
-              </Link>
-            );
-          })}
-        </nav>
+              return (
+                <Link
+                  key={tab.href}
+                  href={tab.href}
+                  className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+                    isActive
+                      ? "bg-background text-text-primary"
+                      : "text-text-secondary hover:text-text-primary"
+                  }`}
+                >
+                  <Icon size={14} />
+                  {tab.label}
+                </Link>
+              );
+            })}
+          </nav>
 
-        {/* Spacer for balance */}
-        <div className="hidden w-32 sm:block" />
+          <span className="mx-1.5 h-5 w-px bg-border" />
+
+          {/* Theme toggle */}
+          <button
+            onClick={toggleTheme}
+            className="flex h-8 w-8 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-background hover:text-text-primary"
+            aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+          >
+            {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
+        </div>
       </div>
     </header>
   );

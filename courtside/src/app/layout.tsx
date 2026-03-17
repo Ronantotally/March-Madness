@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { ChatProvider } from "@/components/chat/ChatContext";
+import { ThemeProvider } from "@/components/shared/ThemeContext";
 import ChatPanel from "@/components/chat/ChatPanel";
 import Nav from "@/components/shared/Nav";
 import StatsGuide from "@/components/shared/StatsGuide";
@@ -51,18 +52,26 @@ export default function RootLayout({
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         <meta name="theme-color" content="#0a0b0f" />
+        {/* Inline script to apply saved theme before first paint — prevents flash */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var t=localStorage.getItem('theme');if(t==='light')document.documentElement.classList.remove('dark')}catch(e){}`,
+          }}
+        />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
       >
-        <ChatProvider>
-          <div className="flex min-h-screen flex-col bg-background text-text-primary">
-            <Nav />
-            <main className="flex-1">{children}</main>
-          </div>
-          <ChatPanel />
-          <StatsGuide />
-        </ChatProvider>
+        <ThemeProvider>
+          <ChatProvider>
+            <div className="flex min-h-screen flex-col bg-background text-text-primary">
+              <Nav />
+              <main className="flex-1">{children}</main>
+            </div>
+            <ChatPanel />
+            <StatsGuide />
+          </ChatProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

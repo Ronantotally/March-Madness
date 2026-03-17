@@ -10,6 +10,7 @@ import FinalFour from "@/components/bracket/FinalFour";
 import BracketHeader from "@/components/bracket/BracketHeader";
 import MatchupDetail from "@/components/bracket/MatchupDetail";
 import ShareCard from "@/components/shared/ShareCard";
+import TournamentIntel from "@/components/bracket/TournamentIntel";
 import { useChatContext } from "@/components/chat/ChatContext";
 
 const REGIONS_TOP = ["East", "South"];
@@ -71,41 +72,60 @@ function BracketContent() {
       {/* Live stats */}
       <BracketHeader bracketState={bracketState} onReset={handleReset} onShare={() => setShareOpen(true)} />
 
-      {/* Region brackets — 2×2 grid on desktop, 1-col on mobile */}
-      <div className="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
-        {REGIONS_TOP.map((region) => (
-          <RegionBracket
-            key={region}
-            region={region}
-            bracketState={bracketState}
-            onPick={handlePick}
-            onExpand={handleExpand}
-            highlightedTeam={highlightedTeam}
-          />
-        ))}
+      {/* Main content: bracket + intel sidebar */}
+      <div className="flex gap-4">
+        {/* Bracket area */}
+        <div className="min-w-0 flex-1">
+          {/* Top regions */}
+          <div className="mb-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
+            {REGIONS_TOP.map((region) => (
+              <RegionBracket
+                key={region}
+                region={region}
+                bracketState={bracketState}
+                onPick={handlePick}
+                onExpand={handleExpand}
+                highlightedTeam={highlightedTeam}
+              />
+            ))}
+          </div>
+
+          {/* Final Four */}
+          <div className="mb-4">
+            <FinalFour
+              bracketState={bracketState}
+              onPick={handlePick}
+              onExpand={handleExpand}
+              highlightedTeam={highlightedTeam}
+            />
+          </div>
+
+          {/* Bottom regions */}
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            {REGIONS_BOTTOM.map((region) => (
+              <RegionBracket
+                key={region}
+                region={region}
+                bracketState={bracketState}
+                onPick={handlePick}
+                onExpand={handleExpand}
+                highlightedTeam={highlightedTeam}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Tournament Intel sidebar — desktop only, hidden on mobile */}
+        <div className="hidden flex-shrink-0 lg:block">
+          <div className="sticky top-20">
+            <TournamentIntel />
+          </div>
+        </div>
       </div>
 
-      {/* Final Four */}
-      <div className="mb-4">
-        <FinalFour
-          bracketState={bracketState}
-          onPick={handlePick}
-          onExpand={handleExpand}
-          highlightedTeam={highlightedTeam}
-        />
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        {REGIONS_BOTTOM.map((region) => (
-          <RegionBracket
-            key={region}
-            region={region}
-            bracketState={bracketState}
-            onPick={handlePick}
-            onExpand={handleExpand}
-            highlightedTeam={highlightedTeam}
-          />
-        ))}
+      {/* Mobile Intel toggle — below bracket on small screens */}
+      <div className="mt-4 lg:hidden">
+        <TournamentIntel />
       </div>
 
       {/* Matchup detail modal */}

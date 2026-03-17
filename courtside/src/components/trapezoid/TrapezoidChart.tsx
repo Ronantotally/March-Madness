@@ -147,7 +147,7 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
         style={{ maxWidth: CHART_W }}
       >
         {/* Background */}
-        <rect width={CHART_W} height={CHART_H} fill="#0a0b0f" rx={12} />
+        <rect width={CHART_W} height={CHART_H} fill="var(--hex-bg)" rx={12} />
 
         {/* Grid */}
         {xTicks.map((x) => (
@@ -157,7 +157,7 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
             x2={xScale(x)}
             y1={MARGIN.top}
             y2={CHART_H - MARGIN.bottom}
-            stroke="#1e2028"
+            stroke="var(--hex-grid)"
             strokeWidth={0.5}
           />
         ))}
@@ -168,7 +168,7 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
             x2={CHART_W - MARGIN.right}
             y1={yScale(y)}
             y2={yScale(y)}
-            stroke="#1e2028"
+            stroke="var(--hex-grid)"
             strokeWidth={0.5}
           />
         ))}
@@ -180,7 +180,7 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
             x2={CHART_W - MARGIN.right}
             y1={yScale(0)}
             y2={yScale(0)}
-            stroke="#2a2c34"
+            stroke="var(--hex-zero-line)"
             strokeWidth={1}
           />
         )}
@@ -192,7 +192,7 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
             x={xScale(x)}
             y={CHART_H - MARGIN.bottom + 20}
             textAnchor="middle"
-            fill="#8a8f98"
+            fill="var(--hex-text-2)"
             fontSize={11}
             fontFamily="var(--font-mono)"
           >
@@ -205,7 +205,7 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
             x={MARGIN.left - 12}
             y={yScale(y) + 4}
             textAnchor="end"
-            fill="#8a8f98"
+            fill="var(--hex-text-2)"
             fontSize={11}
             fontFamily="var(--font-mono)"
           >
@@ -218,7 +218,7 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
           x={MARGIN.left + INNER_W / 2}
           y={CHART_H - 6}
           textAnchor="middle"
-          fill="#8a8f98"
+          fill="var(--hex-text-2)"
           fontSize={11}
           fontFamily="var(--font-sans)"
         >
@@ -229,7 +229,7 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
           x={MARGIN.left + 4}
           y={CHART_H - MARGIN.bottom + 34}
           textAnchor="start"
-          fill="#555a64"
+          fill="var(--hex-subtle)"
           fontSize={9}
           fontFamily="var(--font-sans)"
         >
@@ -239,7 +239,7 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
           x={CHART_W - MARGIN.right - 4}
           y={CHART_H - MARGIN.bottom + 34}
           textAnchor="end"
-          fill="#555a64"
+          fill="var(--hex-subtle)"
           fontSize={9}
           fontFamily="var(--font-sans)"
         >
@@ -250,7 +250,7 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
           x={16}
           y={MARGIN.top + INNER_H / 2}
           textAnchor="middle"
-          fill="#8a8f98"
+          fill="var(--hex-text-2)"
           fontSize={11}
           fontFamily="var(--font-sans)"
           transform={`rotate(-90, 16, ${MARGIN.top + INNER_H / 2})`}
@@ -262,7 +262,7 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
           x={MARGIN.left - 14}
           y={MARGIN.top + 4}
           textAnchor="end"
-          fill="#555a64"
+          fill="var(--hex-subtle)"
           fontSize={9}
           fontFamily="var(--font-sans)"
         >
@@ -272,7 +272,7 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
           x={MARGIN.left - 14}
           y={CHART_H - MARGIN.bottom - 4}
           textAnchor="end"
-          fill="#555a64"
+          fill="var(--hex-subtle)"
           fontSize={9}
           fontFamily="var(--font-sans)"
         >
@@ -284,7 +284,7 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
           x={(xScale(X_MIN + (X_MAX - X_MIN) * 0.5))}
           y={yScale(Y_MAX * 0.72)}
           textAnchor="middle"
-          fill="#555a64"
+          fill="var(--hex-subtle)"
           fillOpacity={0.5}
           fontSize={10}
           fontFamily="var(--font-sans)"
@@ -297,7 +297,7 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
           x={xScale(X_MIN + (X_MAX - X_MIN) * 0.12)}
           y={yScale(Y_MAX * 0.15)}
           textAnchor="middle"
-          fill="#555a64"
+          fill="var(--hex-subtle)"
           fillOpacity={0.35}
           fontSize={9}
           fontFamily="var(--font-sans)"
@@ -309,7 +309,7 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
           x={xScale(X_MIN + (X_MAX - X_MIN) * 0.88)}
           y={yScale(Y_MAX * 0.15)}
           textAnchor="middle"
-          fill="#555a64"
+          fill="var(--hex-subtle)"
           fillOpacity={0.35}
           fontSize={9}
           fontFamily="var(--font-sans)"
@@ -321,7 +321,7 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
           x={xScale(X_MIN + (X_MAX - X_MIN) * 0.5)}
           y={yScale(Y_MIN * 0.5)}
           textAnchor="middle"
-          fill="#555a64"
+          fill="var(--hex-subtle)"
           fillOpacity={0.3}
           fontSize={9}
           fontFamily="var(--font-sans)"
@@ -333,8 +333,7 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
         {/* Trapezoid fill */}
         <path
           d={trapezoidPath}
-          fill="#2EC4B6"
-          fillOpacity={0.04}
+          style={{ fill: "var(--hex-trapezoid-fill)" }}
           stroke="#2EC4B6"
           strokeWidth={1.5}
           strokeDasharray="6 4"
@@ -425,7 +424,7 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
                   r={isHighlighted ? r * 1.5 : isHovered ? r * 1.5 : isSelected ? r * 1.3 : r}
                   fill={color}
                   fillOpacity={isDimmed ? 0.12 : isGold ? 0.9 : 0.75}
-                  stroke={isHighlighted ? "#F5A623" : isSelected ? "#e8e9ed" : isHovered ? color : "none"}
+                  stroke={isHighlighted ? "#F5A623" : isSelected ? "var(--hex-text-1)" : isHovered ? color : "none"}
                   strokeWidth={isHighlighted ? 2.5 : isSelected ? 2 : isHovered ? 1.5 : 0}
                   filter={isGold && !isDimmed ? "url(#glow-gold)" : undefined}
                   style={{
@@ -446,7 +445,7 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
                     x={cx}
                     y={cy + (r > 10 ? 3.5 : 3)}
                     textAnchor="middle"
-                    fill="#0a0b0f"
+                    fill="var(--hex-bg)"
                     fontSize={r > 10 ? 9 : 7}
                     fontWeight={700}
                     fontFamily="var(--font-mono)"

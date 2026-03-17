@@ -210,8 +210,8 @@ export default function MatchupDetail({ game, onClose, onAskAnalyst }: Props) {
         {/* Mini trapezoid */}
         <div className="flex items-center justify-center border-b border-border py-2">
           <svg width={MINI_W} height={MINI_H}>
-            <rect width={MINI_W} height={MINI_H} fill="#0a0b0f" rx={6} />
-            <path d={trapPath} fill="#2EC4B6" fillOpacity={0.06} stroke="#2EC4B6" strokeWidth={0.8} strokeDasharray="3 2" strokeOpacity={0.4} />
+            <rect width={MINI_W} height={MINI_H} fill="var(--hex-bg)" rx={6} />
+            <path d={trapPath} style={{ fill: "var(--hex-trapezoid-fill)" }} stroke="#2EC4B6" strokeWidth={0.8} strokeDasharray="3 2" strokeOpacity={0.4} />
             {/* Team A dot */}
             <circle
               cx={mx(teamA.adjT)}
@@ -219,10 +219,10 @@ export default function MatchupDetail({ game, onClose, onAskAnalyst }: Props) {
               r={6}
               fill={TIER_COLORS[teamA.tier]}
               fillOpacity={0.9}
-              stroke="#e8e9ed"
+              stroke="var(--hex-text-1)"
               strokeWidth={1}
             />
-            <text x={mx(teamA.adjT)} y={my(teamA.netRtg) - 10} textAnchor="middle" fill="#e8e9ed" fontSize={8} fontFamily="var(--font-mono)">
+            <text x={mx(teamA.adjT)} y={my(teamA.netRtg) - 10} textAnchor="middle" fill="var(--hex-text-1)"fontSize={8} fontFamily="var(--font-mono)">
               {teamA.name}
             </text>
             {/* Team B dot */}
@@ -232,10 +232,10 @@ export default function MatchupDetail({ game, onClose, onAskAnalyst }: Props) {
               r={6}
               fill={TIER_COLORS[teamB.tier]}
               fillOpacity={0.9}
-              stroke="#e8e9ed"
+              stroke="var(--hex-text-1)"
               strokeWidth={1}
             />
-            <text x={mx(teamB.adjT)} y={my(teamB.netRtg) + 16} textAnchor="middle" fill="#e8e9ed" fontSize={8} fontFamily="var(--font-mono)">
+            <text x={mx(teamB.adjT)} y={my(teamB.netRtg) + 16} textAnchor="middle" fill="var(--hex-text-1)"fontSize={8} fontFamily="var(--font-mono)">
               {teamB.name}
             </text>
           </svg>
