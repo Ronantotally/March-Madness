@@ -8,6 +8,7 @@ import { Team, BracketGame, TeamTier, UpsetRisk } from "@/types";
 import StatTooltip from "@/components/shared/StatTooltip";
 import { analyzeMatchup } from "@/data/matchup";
 import { getTrapezoidVertices } from "@/data/trapezoid";
+import ArchetypeBadge from "@/components/shared/ArchetypeBadge";
 
 const TIER_COLORS: Record<TeamTier, string> = {
   title_contender: "#F5A623",
@@ -225,6 +226,9 @@ export default function MatchupDetail({ game, onClose, onAskAnalyst }: Props) {
             >
               KP #{teamA.kenpomRank}
             </span>
+            <div className="mt-1">
+              <ArchetypeBadge team={teamA} compact />
+            </div>
           </div>
           <div className="flex flex-col items-center justify-center px-3 py-3">
             <span className="font-mono text-xl font-bold text-text-primary">
@@ -244,6 +248,9 @@ export default function MatchupDetail({ game, onClose, onAskAnalyst }: Props) {
             >
               KP #{teamB.kenpomRank}
             </span>
+            <div className="mt-1">
+              <ArchetypeBadge team={teamB} compact />
+            </div>
           </div>
         </div>
 

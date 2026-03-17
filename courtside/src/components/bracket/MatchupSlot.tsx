@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { BarChart2 } from "lucide-react";
 import { Team, BracketGame, TeamTier } from "@/types";
 import { analyzeMatchup } from "@/data/matchup";
+import { getArchetype } from "@/data/archetypes";
 
 const TIER_COLORS: Record<TeamTier, string> = {
   title_contender: "#F5A623",
@@ -88,6 +89,12 @@ function TeamRow({ team, isWinner, isTop, onClick, isPlayIn }: TeamRowProps) {
         }`}
       >
         {team.name}
+      </span>
+      <span
+        className="shrink-0 text-[8px]"
+        title={getArchetype(team).label}
+      >
+        {getArchetype(team).emoji}
       </span>
       {isWinner && (
         <motion.span

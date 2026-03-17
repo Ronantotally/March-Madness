@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { X, Trophy, Target, Shield, Zap, TrendingUp, BarChart3, Gauge, Dice5, ArrowRight } from "lucide-react";
 import { Team, TeamTier } from "@/types";
 import StatTooltip from "@/components/shared/StatTooltip";
+import ArchetypeBadge from "@/components/shared/ArchetypeBadge";
 
 const TIER_COLORS: Record<TeamTier, string> = {
   title_contender: "#F5A623",
@@ -116,12 +117,15 @@ export default function TeamCard({ team, onClose }: Props) {
               {TIER_LABELS[team.tier]}
             </span>
           </div>
-          <div className="mt-1 flex items-center gap-2 text-xs text-text-secondary">
+          <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-text-secondary">
             <span>({team.seed}) {team.region}</span>
             <span>·</span>
             <span>{team.conference}</span>
             <span>·</span>
             <span>{team.record}</span>
+          </div>
+          <div className="mt-1.5">
+            <ArchetypeBadge team={team} />
           </div>
         </div>
         <button

@@ -6,6 +6,7 @@ import { Team, TeamTier } from "@/types";
 import { getAllTeams } from "@/data/teamUtils";
 import { getTrapezoidVertices } from "@/data/trapezoid";
 import TeamCard from "./TeamCard";
+import { getArchetype } from "@/data/archetypes";
 
 // ---------- constants ----------
 const TIER_COLORS: Record<TeamTier, string> = {
@@ -484,6 +485,20 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
               </span>
               <span>AdjT {hoveredTeam.adjT}</span>
             </div>
+            {(() => {
+              const arch = getArchetype(hoveredTeam);
+              return (
+                <div className="mt-1">
+                  <span
+                    className="inline-flex items-center gap-1 rounded-full px-1.5 py-px text-[9px] font-semibold"
+                    style={{ color: arch.color, background: `${arch.color}15` }}
+                  >
+                    <span>{arch.emoji}</span>
+                    <span>{arch.label}</span>
+                  </span>
+                </div>
+              );
+            })()}
           </motion.div>
         )}
       </AnimatePresence>

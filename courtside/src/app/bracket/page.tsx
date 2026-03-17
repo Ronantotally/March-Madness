@@ -11,6 +11,8 @@ import BracketHeader from "@/components/bracket/BracketHeader";
 import MatchupDetail from "@/components/bracket/MatchupDetail";
 import ShareCard from "@/components/shared/ShareCard";
 import TournamentIntel from "@/components/bracket/TournamentIntel";
+import ChampionProfile from "@/components/bracket/ChampionProfile";
+import UpsetRadar from "@/components/bracket/UpsetRadar";
 import { useChatContext } from "@/components/chat/ChatContext";
 
 const REGIONS_TOP = ["East", "South"];
@@ -24,6 +26,8 @@ function BracketContent() {
   const [expandedGame, setExpandedGame] = useState<BracketGame | null>(null);
   const [highlightedTeam, setHighlightedTeam] = useState<string | null>(null);
   const [shareOpen, setShareOpen] = useState(false);
+  const [championProfileOpen, setChampionProfileOpen] = useState(true);
+  const [upsetRadarOpen, setUpsetRadarOpen] = useState(true);
   const { askQuestion } = useChatContext();
 
   // Handle ?team= query param for cross-page navigation
@@ -115,16 +119,36 @@ function BracketContent() {
           </div>
         </div>
 
-        {/* Tournament Intel sidebar — desktop only, hidden on mobile */}
-        <div className="hidden flex-shrink-0 lg:block">
-          <div className="sticky top-20">
+        {/* Sidebar panels — desktop only, hidden on mobile */}
+        <div className="hidden w-[300px] flex-shrink-0 lg:block">
+          <div className="sticky top-20 space-y-3">
+            <UpsetRadar
+              bracketState={bracketState}
+              isOpen={upsetRadarOpen}
+              onToggle={() => setUpsetRadarOpen(!upsetRadarOpen)}
+            />
+            <ChampionProfile
+              bracketState={bracketState}
+              isOpen={championProfileOpen}
+              onToggle={() => setChampionProfileOpen(!championProfileOpen)}
+            />
             <TournamentIntel />
           </div>
         </div>
       </div>
 
-      {/* Mobile Intel toggle — below bracket on small screens */}
-      <div className="mt-4 lg:hidden">
+      {/* Mobile panels — below bracket on small screens */}
+      <div className="mt-4 space-y-3 lg:hidden">
+        <UpsetRadar
+          bracketState={bracketState}
+          isOpen={upsetRadarOpen}
+          onToggle={() => setUpsetRadarOpen(!upsetRadarOpen)}
+        />
+        <ChampionProfile
+          bracketState={bracketState}
+          isOpen={championProfileOpen}
+          onToggle={() => setChampionProfileOpen(!championProfileOpen)}
+        />
         <TournamentIntel />
       </div>
 
