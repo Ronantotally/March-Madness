@@ -4,19 +4,19 @@
   "dataSource": "KenPom (kenpom.com)",
   "trapezoidBoundary": {
     "topLeft": {
-      "pace": 62,
+      "pace": 64,
       "netRtg": 40
     },
     "topRight": {
-      "pace": 73,
+      "pace": 72.5,
       "netRtg": 40
     },
     "bottomRight": {
-      "pace": 71,
+      "pace": 70.5,
       "netRtg": 29
     },
     "bottomLeft": {
-      "pace": 64,
+      "pace": 66,
       "netRtg": 29
     },
     "note": "Boundary coordinates calibrated to KenPom AdjEM scale."
@@ -173,8 +173,8 @@
       "sosNetRtgRank": 24,
       "meetsChampFormula": true,
       "meetsExpandedCriteria": true,
-      "insideTrapezoid": true,
-      "tier": "title_contender"
+      "insideTrapezoid": false,
+      "tier": "kenpom_sleeper"
     },
     {
       "kenpomRank": 8,
@@ -194,8 +194,8 @@
       "sosNetRtgRank": 7,
       "meetsChampFormula": false,
       "meetsExpandedCriteria": true,
-      "insideTrapezoid": true,
-      "tier": "trapezoid_elite"
+      "insideTrapezoid": false,
+      "tier": "kenpom_sleeper"
     },
     {
       "kenpomRank": 9,
