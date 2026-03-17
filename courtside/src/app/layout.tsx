@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { ChatProvider } from "@/components/chat/ChatContext";
 import ChatPanel from "@/components/chat/ChatPanel";
 import Nav from "@/components/shared/Nav";
+import StatsGuide from "@/components/shared/StatsGuide";
 import "./globals.css";
 
 const geistSans = localFont({
@@ -60,6 +61,7 @@ export default function RootLayout({
             <main className="flex-1">{children}</main>
           </div>
           <ChatPanel />
+          <StatsGuide />
         </ChatProvider>
       </body>
     </html>

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { X, Trophy, Target, Shield, Zap, TrendingUp, BarChart3, Gauge, Dice5, ArrowRight } from "lucide-react";
 import { Team, TeamTier } from "@/types";
+import StatTooltip from "@/components/shared/StatTooltip";
 
 const TIER_COLORS: Record<TeamTier, string> = {
   title_contender: "#F5A623",
@@ -42,7 +43,7 @@ function StatRow({
   highlight,
 }: {
   icon: React.ElementType;
-  label: string;
+  label: React.ReactNode;
   value: string | number;
   rank?: number;
   highlight?: boolean;
@@ -147,7 +148,7 @@ export default function TeamCard({ team, onClose }: Props) {
         <div>
           <div className="text-xs text-text-secondary">KenPom Rank</div>
           <div className="font-mono text-sm font-semibold text-text-primary">
-            AdjEM {team.netRtg > 0 ? "+" : ""}
+            <StatTooltip stat="AdjEM">AdjEM</StatTooltip> {team.netRtg > 0 ? "+" : ""}
             {team.netRtg.toFixed(2)}
           </div>
         </div>
@@ -157,14 +158,14 @@ export default function TeamCard({ team, onClose }: Props) {
       <div className="border-b border-border px-4 py-2">
         <StatRow
           icon={Target}
-          label="Offense (AdjO)"
+          label={<>Offense (<StatTooltip stat="AdjO">AdjO</StatTooltip>)</>}
           value={team.oRtg.toFixed(1)}
           rank={team.oRtgRank}
           highlight={team.oRtgRank <= 25}
         />
         <StatRow
           icon={Shield}
-          label="Defense (AdjD)"
+          label={<>Defense (<StatTooltip stat="AdjD">AdjD</StatTooltip>)</>}
           value={team.dRtg.toFixed(1)}
           rank={team.dRtgRank}
           highlight={team.dRtgRank <= 25}
@@ -176,20 +177,20 @@ export default function TeamCard({ team, onClose }: Props) {
         />
         <StatRow
           icon={Gauge}
-          label="Tempo (AdjT)"
+          label={<>Tempo (<StatTooltip stat="AdjT">AdjT</StatTooltip>)</>}
           value={team.adjT.toFixed(1)}
           rank={team.adjTRank}
         />
         <StatRow
           icon={BarChart3}
-          label="SOS (Net Rtg)"
+          label={<><StatTooltip stat="SOS">SOS</StatTooltip> (Net Rtg)</>}
           value=""
           rank={team.sosNetRtgRank}
           highlight={team.sosNetRtgRank <= 45}
         />
         <StatRow
           icon={Dice5}
-          label="Luck"
+          label={<StatTooltip stat="Luck">Luck</StatTooltip>}
           value={team.luck > 0 ? `+${team.luck.toFixed(3)}` : team.luck.toFixed(3)}
         />
       </div>

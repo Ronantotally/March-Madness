@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { X, MessageSquare, AlertTriangle, Shield, Zap, Triangle } from "lucide-react";
 import { Team, BracketGame, TeamTier, UpsetRisk } from "@/types";
+import StatTooltip from "@/components/shared/StatTooltip";
 import { analyzeMatchup } from "@/data/matchup";
 import { getTrapezoidVertices } from "@/data/trapezoid";
 
@@ -50,7 +51,7 @@ function StatBar({
   rankB,
   higherIsBetter = true,
 }: {
-  label: string;
+  label: React.ReactNode;
   valueA: number;
   valueB: number;
   rankA?: number;
@@ -246,11 +247,11 @@ export default function MatchupDetail({ game, onClose, onAskAnalyst }: Props) {
             <span className="text-[10px] font-semibold text-text-secondary">{teamA.name}</span>
             <span className="text-[10px] font-semibold text-text-secondary">{teamB.name}</span>
           </div>
-          <StatBar label="Offense (AdjO)" valueA={teamA.oRtg} valueB={teamB.oRtg} rankA={teamA.oRtgRank} rankB={teamB.oRtgRank} />
-          <StatBar label="Defense (AdjD)" valueA={teamA.dRtg} valueB={teamB.dRtg} rankA={teamA.dRtgRank} rankB={teamB.dRtgRank} higherIsBetter={false} />
-          <StatBar label="Net Rating (AdjEM)" valueA={teamA.netRtg} valueB={teamB.netRtg} />
-          <StatBar label="Tempo (AdjT)" valueA={teamA.adjT} valueB={teamB.adjT} />
-          <StatBar label="SOS Rank" valueA={teamA.sosNetRtgRank} valueB={teamB.sosNetRtgRank} higherIsBetter={false} />
+          <StatBar label={<>Offense (<StatTooltip stat="AdjO">AdjO</StatTooltip>)</>} valueA={teamA.oRtg} valueB={teamB.oRtg} rankA={teamA.oRtgRank} rankB={teamB.oRtgRank} />
+          <StatBar label={<>Defense (<StatTooltip stat="AdjD">AdjD</StatTooltip>)</>} valueA={teamA.dRtg} valueB={teamB.dRtg} rankA={teamA.dRtgRank} rankB={teamB.dRtgRank} higherIsBetter={false} />
+          <StatBar label={<>Net Rating (<StatTooltip stat="AdjEM">AdjEM</StatTooltip>)</>} valueA={teamA.netRtg} valueB={teamB.netRtg} />
+          <StatBar label={<>Tempo (<StatTooltip stat="AdjT">AdjT</StatTooltip>)</>} valueA={teamA.adjT} valueB={teamB.adjT} />
+          <StatBar label={<><StatTooltip stat="SOS">SOS</StatTooltip> Rank</>} valueA={teamA.sosNetRtgRank} valueB={teamB.sosNetRtgRank} higherIsBetter={false} />
         </div>
 
         {/* Insights */}
