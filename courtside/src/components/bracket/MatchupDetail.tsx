@@ -45,63 +45,103 @@ function my(netRtg: number) {
 
 function StatBar({
   label,
+  hint,
   valueA,
   valueB,
   rankA,
   rankB,
   higherIsBetter = true,
+  neutral = false,
 }: {
   label: React.ReactNode;
+  hint?: string;
   valueA: number;
   valueB: number;
   rankA?: number;
   rankB?: number;
   higherIsBetter?: boolean;
+  neutral?: boolean;
 }) {
-  const aWins = higherIsBetter ? valueA > valueB : valueA < valueB;
-  const bWins = higherIsBetter ? valueB > valueA : valueB < valueA;
-  const maxVal = Math.max(Math.abs(valueA), Math.abs(valueB));
-  const barA = maxVal > 0 ? (Math.abs(valueA) / maxVal) * 100 : 50;
-  const barB = maxVal > 0 ? (Math.abs(valueB) / maxVal) * 100 : 50;
+  const aWins = !neutral && (higherIsBetter ? valueA > valueB : valueA < valueB);
+  const bWins = !neutral && (higherIsBetter ? valueB > valueA : valueB < valueA);
+
+  // Compute bar widths proportional to advantage gap
+  // Each bar shows the relative magnitude of that team's value
+  // so that a blowout mismatch produces one long bar and one short bar
+  const total = Math.abs(valueA) + Math.abs(valueB);
+  // Normalize: map each value to a percentage of the total, then scale to 0-100%
+  // This makes bars proportional to actual values
+  const pctA = total > 0 ? (Math.abs(valueA) / total) * 100 : 50;
+  const pctB = total > 0 ? (Math.abs(valueB) / total) * 100 : 50;
+
+  const TEAL = "#2EC4B6";
+  const GRAY = "rgb(var(--border))";
+  const NEUTRAL = "rgb(var(--text-2) / 0.35)";
+
+  const colorA = neutral ? NEUTRAL : aWins ? TEAL : GRAY;
+  const colorB = neutral ? NEUTRAL : bWins ? TEAL : GRAY;
 
   return (
-    <div className="mb-2.5">
-      <div className="mb-1 text-center text-[10px] text-text-secondary">{label}</div>
+    <div className="mb-3">
+      {/* Label + hint */}
+      <div className="mb-1 text-center">
+        <div className="text-[10px] text-text-secondary">{label}</div>
+        {hint && (
+          <div className="text-[8px] text-text-secondary/40">{hint}</div>
+        )}
+      </div>
       <div className="flex items-center gap-2">
-        <div className="flex w-16 items-center justify-end gap-1">
+        {/* Left value (team A) */}
+        <div className="flex w-[72px] items-center justify-end gap-1">
           {rankA !== undefined && (
-            <span className="font-mono text-[9px] text-text-secondary/50">#{rankA}</span>
+            <span className="font-mono text-[9px] text-text-secondary/50">
+              #{rankA}
+            </span>
           )}
-          <span className={`font-mono text-xs font-semibold ${aWins ? "text-text-primary" : "text-text-secondary"}`}>
-            {typeof valueA === "number" ? valueA.toFixed(1) : valueA}
+          <span
+            className={`font-mono text-xs ${
+              aWins
+                ? "font-bold text-accent-green"
+                : "font-semibold text-text-secondary"
+            }`}
+          >
+            {valueA.toFixed(1)}
           </span>
         </div>
-        <div className="flex h-2 flex-1 overflow-hidden rounded-full bg-background">
+
+        {/* Opposing bars from center */}
+        <div className="flex h-[6px] flex-1 overflow-hidden rounded-full bg-background">
+          {/* Left half: team A bar grows LEFT from center */}
           <div className="flex h-full w-1/2 justify-end">
             <div
-              className="h-full rounded-l-full transition-all"
-              style={{
-                width: `${barA}%`,
-                background: aWins ? "#2EC4B6" : "#4a4f5a",
-              }}
+              className="h-full rounded-l-full transition-all duration-300"
+              style={{ width: `${pctA}%`, background: colorA }}
             />
           </div>
+          {/* Right half: team B bar grows RIGHT from center */}
           <div className="flex h-full w-1/2">
             <div
-              className="h-full rounded-r-full transition-all"
-              style={{
-                width: `${barB}%`,
-                background: bWins ? "#2EC4B6" : "#4a4f5a",
-              }}
+              className="h-full rounded-r-full transition-all duration-300"
+              style={{ width: `${pctB}%`, background: colorB }}
             />
           </div>
         </div>
-        <div className="flex w-16 items-center gap-1">
-          <span className={`font-mono text-xs font-semibold ${bWins ? "text-text-primary" : "text-text-secondary"}`}>
-            {typeof valueB === "number" ? valueB.toFixed(1) : valueB}
+
+        {/* Right value (team B) */}
+        <div className="flex w-[72px] items-center gap-1">
+          <span
+            className={`font-mono text-xs ${
+              bWins
+                ? "font-bold text-accent-green"
+                : "font-semibold text-text-secondary"
+            }`}
+          >
+            {valueB.toFixed(1)}
           </span>
           {rankB !== undefined && (
-            <span className="font-mono text-[9px] text-text-secondary/50">#{rankB}</span>
+            <span className="font-mono text-[9px] text-text-secondary/50">
+              #{rankB}
+            </span>
           )}
         </div>
       </div>
@@ -247,11 +287,11 @@ export default function MatchupDetail({ game, onClose, onAskAnalyst }: Props) {
             <span className="text-[10px] font-semibold text-text-secondary">{teamA.name}</span>
             <span className="text-[10px] font-semibold text-text-secondary">{teamB.name}</span>
           </div>
-          <StatBar label={<>Offense (<StatTooltip stat="AdjO">AdjO</StatTooltip>)</>} valueA={teamA.oRtg} valueB={teamB.oRtg} rankA={teamA.oRtgRank} rankB={teamB.oRtgRank} />
-          <StatBar label={<>Defense (<StatTooltip stat="AdjD">AdjD</StatTooltip>)</>} valueA={teamA.dRtg} valueB={teamB.dRtg} rankA={teamA.dRtgRank} rankB={teamB.dRtgRank} higherIsBetter={false} />
-          <StatBar label={<>Net Rating (<StatTooltip stat="AdjEM">AdjEM</StatTooltip>)</>} valueA={teamA.netRtg} valueB={teamB.netRtg} />
-          <StatBar label={<>Tempo (<StatTooltip stat="AdjT">AdjT</StatTooltip>)</>} valueA={teamA.adjT} valueB={teamB.adjT} />
-          <StatBar label={<><StatTooltip stat="SOS">SOS</StatTooltip> Rank</>} valueA={teamA.sosNetRtgRank} valueB={teamB.sosNetRtgRank} higherIsBetter={false} />
+          <StatBar label={<>Offense (<StatTooltip stat="AdjO">AdjO</StatTooltip>)</>} hint="higher = better" valueA={teamA.oRtg} valueB={teamB.oRtg} rankA={teamA.oRtgRank} rankB={teamB.oRtgRank} />
+          <StatBar label={<>Defense (<StatTooltip stat="AdjD">AdjD</StatTooltip>)</>} hint="lower = better" valueA={teamA.dRtg} valueB={teamB.dRtg} rankA={teamA.dRtgRank} rankB={teamB.dRtgRank} higherIsBetter={false} />
+          <StatBar label={<>Net Rating (<StatTooltip stat="AdjEM">AdjEM</StatTooltip>)</>} hint="higher = better" valueA={teamA.netRtg} valueB={teamB.netRtg} />
+          <StatBar label={<>Tempo (<StatTooltip stat="AdjT">AdjT</StatTooltip>)</>} valueA={teamA.adjT} valueB={teamB.adjT} neutral />
+          <StatBar label={<><StatTooltip stat="SOS">SOS</StatTooltip> Rank</>} hint="lower = better" valueA={teamA.sosNetRtgRank} valueB={teamB.sosNetRtgRank} higherIsBetter={false} />
         </div>
 
         {/* Insights */}
