@@ -1,9 +1,37 @@
 import Anthropic from "@anthropic-ai/sdk";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import teamsData from "@/data/teams.json";
 import { TeamsData, Team } from "@/types";
 
 const data = teamsData as TeamsData;
+
+// --- Rate limiting ---
+const RATE_LIMIT_WINDOW_MS = 60_000; // 1 minute
+const RATE_LIMIT_MAX = 20;
+const rateLimitStore = new Map<string, number[]>();
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const timestamps = rateLimitStore.get(ip) ?? [];
+  const recent = timestamps.filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
+  rateLimitStore.set(ip, recent);
+  if (recent.length >= RATE_LIMIT_MAX) return true;
+  recent.push(now);
+  return false;
+}
+
+// Clean up stale entries every 5 minutes
+if (typeof globalThis !== "undefined") {
+  const cleanup = () => {
+    const now = Date.now();
+    rateLimitStore.forEach((timestamps, ip) => {
+      const recent = timestamps.filter((t) => now - t < RATE_LIMIT_WINDOW_MS);
+      if (recent.length === 0) rateLimitStore.delete(ip);
+      else rateLimitStore.set(ip, recent);
+    });
+  };
+  setInterval(cleanup, 5 * 60_000);
+}
 
 const SYSTEM_PROMPT = `You are Courtside's AI basketball analyst — sharp, opinionated, data-grounded. You know the 2026 NCAA Tournament inside and out.
 
@@ -160,6 +188,15 @@ function executeToolCall(name: string, input: Record<string, string>): string {
 }
 
 export async function POST(req: NextRequest) {
+  // Rate limiting
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? req.headers.get("x-real-ip") ?? "unknown";
+  if (isRateLimited(ip)) {
+    return NextResponse.json(
+      { error: "You're sending too many requests. Please wait a moment and try again." },
+      { status: 429 }
+    );
+  }
+
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     return new Response(
