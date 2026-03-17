@@ -8,15 +8,15 @@
       "netRtg": 40
     },
     "topRight": {
-      "pace": 73.5,
+      "pace": 73,
       "netRtg": 40
     },
     "bottomRight": {
-      "pace": 72,
+      "pace": 71,
       "netRtg": 29
     },
     "bottomLeft": {
-      "pace": 63,
+      "pace": 64,
       "netRtg": 29
     },
     "note": "Boundary coordinates calibrated to KenPom AdjEM scale."
