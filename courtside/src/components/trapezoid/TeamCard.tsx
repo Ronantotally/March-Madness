@@ -172,12 +172,12 @@ export default function TeamCard({ team, onClose }: Props) {
         />
         <StatRow
           icon={Zap}
-          label="Net Rating"
+          label={<>Adj. Efficiency Margin (<StatTooltip stat="AdjEM">AdjEM</StatTooltip>)</>}
           value={`${team.netRtg > 0 ? "+" : ""}${team.netRtg.toFixed(2)}`}
         />
         <StatRow
           icon={Gauge}
-          label={<>Tempo (<StatTooltip stat="AdjT">AdjT</StatTooltip>)</>}
+          label={<>Adj. Tempo (<StatTooltip stat="AdjT">AdjT</StatTooltip>)</>}
           value={team.adjT.toFixed(1)}
           rank={team.adjTRank}
         />

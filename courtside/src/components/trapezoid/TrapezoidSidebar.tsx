@@ -86,19 +86,40 @@ export default function TrapezoidSidebar({
         <h2 className="mb-1.5 text-xs font-bold uppercase tracking-wider text-text-primary">
           Reading the chart
         </h2>
-        <div className="space-y-1 text-[11px] leading-relaxed text-text-secondary">
-          <p>
-            <span className="text-text-primary">→ X-axis (Pace):</span> How
-            fast a team plays. Left = slow, right = fast.
-          </p>
-          <p>
-            <span className="text-text-primary">↑ Y-axis (Net Rating):</span>{" "}
-            How much better a team is than average. Higher = dominant.
-          </p>
-          <p>
-            The trapezoid is wider at the top because elite teams can win at any
-            speed. Lower-rated teams need the right pace to compete.
-          </p>
+        <div className="space-y-2 text-[11px] leading-relaxed text-text-secondary">
+          <div>
+            <p className="text-text-primary">→ X-axis: Adjusted Tempo (AdjT)</p>
+            <p>
+              How fast a team plays, measured in possessions per game and
+              adjusted for opponent. If you play a bunch of slow teams, your raw
+              pace drops — but that doesn&apos;t mean you&apos;re a slow team. AdjT
+              corrects for that to estimate your true speed against an average
+              opponent.
+            </p>
+          </div>
+          <div>
+            <p className="text-text-primary">↑ Y-axis: Adjusted Efficiency Margin (AdjEM)</p>
+            <p>
+              How many points a team would outscore an average opponent per 100
+              possessions. It combines offensive and defensive efficiency (AdjO
+              minus AdjD) and adjusts for opponent quality — beating a great
+              team by 5 tells you more than beating a bad team by 20. This is a
+              predictive measure, not just a summary of past results. It
+              estimates how good a team truly is right now, with schedule noise
+              filtered out.
+            </p>
+          </div>
+          <div>
+            <p className="text-text-primary">Why these two axes?</p>
+            <p>
+              AdjEM strips out pace so you can compare fast and slow teams
+              fairly. AdjT tells you how fast they actually play. These are
+              completely independent — knowing a team&apos;s speed tells you nothing
+              about how good they are, and vice versa. The trapezoid combines
+              both to identify teams with the right mix of dominance and style
+              to win in March.
+            </p>
+          </div>
         </div>
       </div>
 

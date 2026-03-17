@@ -6,10 +6,10 @@ import { useState, useRef, useEffect } from "react";
  * Short, one-line definitions for inline tooltips.
  */
 const STAT_DEFINITIONS: Record<string, string> = {
-  AdjEM: "Points better than average per game. Higher = better.",
+  AdjEM: "Points better than average per 100 possessions, adjusted for opponent quality. Higher = more dominant.",
   AdjO: "Points scored per 100 possessions. Higher = better.",
   AdjD: "Points allowed per 100 possessions. Lower = better.",
-  AdjT: "Possessions per game (pace). Neither fast nor slow is inherently better.",
+  AdjT: "Possessions per game, adjusted for opponent tempo. Higher = faster pace.",
   SOS: "Strength of schedule. Lower rank = tougher opponents.",
   Luck: "Close-game over/under-performance. Positive = lucky.",
 };

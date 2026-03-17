@@ -222,7 +222,7 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
           fontSize={11}
           fontFamily="var(--font-sans)"
         >
-          {"Pace (Possessions per game) →"}
+          {"Adjusted Tempo (AdjT) →"}
         </text>
         {/* Slower / Faster edge labels */}
         <text
@@ -255,7 +255,7 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
           fontFamily="var(--font-sans)"
           transform={`rotate(-90, 16, ${MARGIN.top + INNER_H / 2})`}
         >
-          {"↑ Net Rating (Points better than average)"}
+          {"↑ Adjusted Efficiency Margin (AdjEM)"}
         </text>
         {/* Elite / Weaker edge labels */}
         <text
@@ -482,7 +482,7 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
                 AdjEM {hoveredTeam.netRtg > 0 ? "+" : ""}
                 {hoveredTeam.netRtg}
               </span>
-              <span>Pace {hoveredTeam.adjT}</span>
+              <span>AdjT {hoveredTeam.adjT}</span>
             </div>
           </motion.div>
         )}
