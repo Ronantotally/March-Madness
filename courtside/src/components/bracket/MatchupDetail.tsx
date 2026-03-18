@@ -11,6 +11,7 @@ import { getTrapezoidVertices } from "@/data/trapezoid";
 import ArchetypeBadge from "@/components/shared/ArchetypeBadge";
 import { getTeamTravelInfo, TEAM_LOCATIONS, getTeamVenue } from "@/data/locations";
 import TravelMap from "@/components/shared/TravelMap";
+import BettingLines from "@/components/bracket/BettingLines";
 
 const TIER_COLORS: Record<TeamTier, string> = {
   title_contender: "#F5A623",
@@ -195,7 +196,7 @@ export default function MatchupDetail({ game, onClose, onAskAnalyst }: Props) {
         initial={{ scale: 0.95 }}
         animate={{ scale: 1 }}
         exit={{ scale: 0.95 }}
-        className="w-full max-w-md overflow-hidden rounded-xl border border-border bg-surface shadow-2xl"
+        className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-xl border border-border bg-surface shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -490,6 +491,11 @@ export default function MatchupDetail({ game, onClose, onAskAnalyst }: Props) {
             </div>
           );
         })()}
+
+        {/* Betting Lines */}
+        {game.round === "R64" && (
+          <BettingLines teamAName={teamA.name} teamBName={teamB.name} />
+        )}
 
         {/* Actions */}
         <div className="flex gap-2 px-4 py-3">
