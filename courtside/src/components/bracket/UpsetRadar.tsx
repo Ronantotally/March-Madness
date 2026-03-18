@@ -2,10 +2,12 @@
 
 import { useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { AlertTriangle, ChevronDown, ChevronUp, Check, Radio } from "lucide-react";
+import { AlertTriangle, ChevronDown, ChevronUp, Check, Radio, MapPin } from "lucide-react";
 import { BracketState, BracketGame, Team } from "@/types";
 import { analyzeMatchup, getUpsetRisk } from "@/data/matchup";
 import { getArchetype } from "@/data/archetypes";
+import { getTeamTravelInfo, TEAM_LOCATIONS, getTeamVenue } from "@/data/locations";
+import TravelMap from "@/components/shared/TravelMap";
 
 interface UpsetCandidate {
   game: BracketGame;
@@ -15,6 +17,8 @@ interface UpsetCandidate {
   reason: string;
   risk: "watch" | "danger" | "likely_upset";
   userPickedUpset: boolean | null; // null if no pick yet
+  travelEdge: boolean; // underdog travels 400+ mi less
+  travelNote: string | null;
 }
 
 const RISK_CONFIG = {
@@ -101,9 +105,28 @@ export default function UpsetRadar({ bracketState, isOpen, onToggle }: Props) {
       if (risk === "safe") continue;
 
       const analysis = analyzeMatchup(game.topSeed, game.bottomSeed);
-      const upsetProb = higher === game.topSeed
+      let upsetProb = higher === game.topSeed
         ? analysis.winProbabilityB
         : analysis.winProbabilityA;
+
+      // Travel factor: compute distance advantage for underdog
+      const travelHigher = getTeamTravelInfo(higher.name);
+      const travelLower = getTeamTravelInfo(lower.name);
+      let travelEdge = false;
+      let travelNote: string | null = null;
+
+      if (travelHigher && travelLower) {
+        const distanceAdvantage = travelHigher.miles - travelLower.miles;
+        // Underdog travels 400+ miles less → travel edge
+        if (distanceAdvantage > 400) {
+          travelEdge = true;
+          travelNote = `${lower.name} travels ${travelLower.miles.toLocaleString()} mi vs ${higher.name}'s ${travelHigher.miles.toLocaleString()} mi — home court edge for the underdog.`;
+          // Boost upset probability slightly (up to 3%) for 500+ mi advantage
+          if (distanceAdvantage > 500) {
+            upsetProb = Math.min(upsetProb + 0.03, 0.85);
+          }
+        }
+      }
 
       // Only show if upset probability >= 30%
       if (upsetProb < 0.30) continue;
@@ -121,6 +144,8 @@ export default function UpsetRadar({ bracketState, isOpen, onToggle }: Props) {
         reason: generateUpsetReason(higher, lower),
         risk: risk as "watch" | "danger" | "likely_upset",
         userPickedUpset,
+        travelEdge,
+        travelNote,
       });
     }
 
@@ -187,6 +212,13 @@ export default function UpsetRadar({ bracketState, isOpen, onToggle }: Props) {
                     const cfg = RISK_CONFIG[candidate.risk];
                     const isTopThreat = i === 0;
 
+                    // Travel map data
+                    const venueData = getTeamVenue(candidate.higherSeed.name);
+                    const higherLoc = TEAM_LOCATIONS[candidate.higherSeed.name];
+                    const lowerLoc = TEAM_LOCATIONS[candidate.lowerSeed.name];
+                    const travelHigher = getTeamTravelInfo(candidate.higherSeed.name);
+                    const travelLower = getTeamTravelInfo(candidate.lowerSeed.name);
+
                     return (
                       <motion.div
                         key={candidate.game.id}
@@ -220,12 +252,19 @@ export default function UpsetRadar({ bracketState, isOpen, onToggle }: Props) {
                               ({candidate.higherSeed.seed}) {candidate.higherSeed.name}
                             </span>
                           </div>
-                          <span
-                            className="rounded-full px-1.5 py-px text-[8px] font-bold uppercase"
-                            style={{ color: cfg.color, background: `${cfg.color}20` }}
-                          >
-                            {cfg.label}
-                          </span>
+                          <div className="flex items-center gap-1">
+                            {candidate.travelEdge && (
+                              <span className="rounded bg-accent-green/15 px-1 py-px text-[7px] font-bold text-accent-green">
+                                Travel edge
+                              </span>
+                            )}
+                            <span
+                              className="rounded-full px-1.5 py-px text-[8px] font-bold uppercase"
+                              style={{ color: cfg.color, background: `${cfg.color}20` }}
+                            >
+                              {cfg.label}
+                            </span>
+                          </div>
                         </div>
 
                         {/* Risk gauge */}
@@ -235,6 +274,32 @@ export default function UpsetRadar({ bracketState, isOpen, onToggle }: Props) {
                         <p className="mt-1 text-[10px] leading-snug text-text-secondary">
                           {candidate.reason}
                         </p>
+
+                        {/* Travel context note */}
+                        {candidate.travelNote && (
+                          <div className="mt-1 flex items-start gap-1">
+                            <MapPin size={8} className="mt-0.5 shrink-0 text-accent-green" />
+                            <span className="text-[10px] leading-snug text-accent-green">
+                              {candidate.travelNote}
+                            </span>
+                          </div>
+                        )}
+
+                        {/* Mini travel map */}
+                        {venueData && higherLoc && lowerLoc && travelHigher && travelLower && (
+                          <div className="mt-2 flex justify-center">
+                            <TravelMap
+                              venueCoord={venueData.coords}
+                              teamACoord={higherLoc.coords}
+                              teamBCoord={lowerLoc.coords}
+                              teamAName={candidate.higherSeed.name}
+                              teamBName={candidate.lowerSeed.name}
+                              teamAMiles={travelHigher.miles}
+                              teamBMiles={travelLower.miles}
+                              compact
+                            />
+                          </div>
+                        )}
 
                         {/* User pick status */}
                         {candidate.userPickedUpset !== null && (

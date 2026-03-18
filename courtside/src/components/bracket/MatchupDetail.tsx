@@ -9,7 +9,8 @@ import StatTooltip from "@/components/shared/StatTooltip";
 import { analyzeMatchup } from "@/data/matchup";
 import { getTrapezoidVertices } from "@/data/trapezoid";
 import ArchetypeBadge from "@/components/shared/ArchetypeBadge";
-import { getTeamTravelInfo } from "@/data/locations";
+import { getTeamTravelInfo, TEAM_LOCATIONS, getTeamVenue } from "@/data/locations";
+import TravelMap from "@/components/shared/TravelMap";
 
 const TIER_COLORS: Record<TeamTier, string> = {
   title_contender: "#F5A623",
@@ -372,110 +373,123 @@ export default function MatchupDetail({ game, onClose, onAskAnalyst }: Props) {
         </div>
 
         {/* Travel distance */}
-        {travelA && travelB && (
-          <div className="border-b border-border px-4 py-3">
-            <div className="mb-2 flex items-center gap-1.5">
-              <Plane size={10} className="text-text-secondary" />
-              <span className="text-[10px] font-semibold text-text-secondary">
-                TRAVEL · {travelA.venueCity}
-              </span>
-            </div>
+        {travelA && travelB && (() => {
+          const aCloser = travelA.miles <= travelB.miles;
+          const bCloser = travelB.miles <= travelA.miles;
+          const maxMiles = Math.max(travelA.miles, travelB.miles, 1);
+          const aHomeCourt = travelA.miles < 200;
+          const bHomeCourt = travelB.miles < 200;
+          const bigEdgeRatio = maxMiles > 0
+            ? Math.max(travelA.miles, travelB.miles) / Math.max(Math.min(travelA.miles, travelB.miles), 1)
+            : 1;
+          const bigEdgeTeam = travelA.miles < travelB.miles ? teamA : teamB;
+          const bigEdgeFar = travelA.miles < travelB.miles ? travelB : travelA;
+          const bigEdgeClose = travelA.miles < travelB.miles ? travelA : travelB;
+          const venueData = getTeamVenue(teamA.name);
+          const teamALoc = TEAM_LOCATIONS[teamA.name];
+          const teamBLoc = TEAM_LOCATIONS[teamB.name];
 
-            {/* Team A travel */}
-            {(() => {
-              const aCloser = travelA.miles <= travelB.miles;
-              const bCloser = travelB.miles <= travelA.miles;
-              const maxMiles = Math.max(travelA.miles, travelB.miles, 1);
-              const aHomeCourt = travelA.miles < 200;
-              const bHomeCourt = travelB.miles < 200;
-              const bigEdgeRatio = maxMiles > 0
-                ? Math.max(travelA.miles, travelB.miles) / Math.max(Math.min(travelA.miles, travelB.miles), 1)
-                : 1;
-              const bigEdgeTeam = travelA.miles < travelB.miles ? teamA : teamB;
-              const bigEdgeFar = travelA.miles < travelB.miles ? travelB : travelA;
-              const bigEdgeClose = travelA.miles < travelB.miles ? travelA : travelB;
+          return (
+            <div className="border-b border-border px-4 py-3">
+              <div className="mb-2 flex items-center gap-1.5">
+                <Plane size={10} className="text-text-secondary" />
+                <span className="text-[10px] font-semibold text-text-secondary">
+                  TRAVEL DISTANCE · {travelA.venueCity}
+                </span>
+              </div>
 
-              return (
-                <>
-                  <div className="space-y-2">
-                    {/* Team A */}
-                    <div>
-                      <div className="mb-0.5 flex items-center justify-between">
-                        <div className="flex items-center gap-1.5">
-                          <MapPin size={10} className={aCloser ? "text-accent-green" : "text-text-secondary/50"} />
-                          <span className={`text-[11px] ${aCloser ? "font-semibold text-text-primary" : "text-text-secondary"}`}>
-                            {teamA.name}
-                          </span>
-                          {aHomeCourt && (
-                            <span className="rounded bg-accent-green/15 px-1 py-px text-[8px] font-bold text-accent-green">
-                              Home court edge
-                            </span>
-                          )}
-                        </div>
-                        <span className={`font-mono text-[11px] ${aCloser ? "font-bold text-accent-green" : "text-text-secondary"}`}>
-                          ~{travelA.miles.toLocaleString()} mi
-                        </span>
-                      </div>
-                      <div className="h-[4px] overflow-hidden rounded-full bg-background">
-                        <div
-                          className="h-full rounded-full transition-all duration-300"
-                          style={{
-                            width: `${Math.max((travelA.miles / maxMiles) * 100, 3)}%`,
-                            background: aCloser ? "#2EC4B6" : "rgb(var(--text-2) / 0.25)",
-                          }}
-                        />
-                      </div>
-                      <div className="mt-0.5 text-[9px] text-text-secondary/50">
-                        from {travelA.teamCity}
-                      </div>
-                    </div>
+              {/* Mini-map */}
+              {venueData && teamALoc && teamBLoc && (
+                <div className="mb-3 flex justify-center">
+                  <TravelMap
+                    venueCoord={venueData.coords}
+                    teamACoord={teamALoc.coords}
+                    teamBCoord={teamBLoc.coords}
+                    teamAName={teamA.name}
+                    teamBName={teamB.name}
+                    teamAMiles={travelA.miles}
+                    teamBMiles={travelB.miles}
+                  />
+                </div>
+              )}
 
-                    {/* Team B */}
-                    <div>
-                      <div className="mb-0.5 flex items-center justify-between">
-                        <div className="flex items-center gap-1.5">
-                          <MapPin size={10} className={bCloser ? "text-accent-green" : "text-text-secondary/50"} />
-                          <span className={`text-[11px] ${bCloser ? "font-semibold text-text-primary" : "text-text-secondary"}`}>
-                            {teamB.name}
-                          </span>
-                          {bHomeCourt && (
-                            <span className="rounded bg-accent-green/15 px-1 py-px text-[8px] font-bold text-accent-green">
-                              Home court edge
-                            </span>
-                          )}
-                        </div>
-                        <span className={`font-mono text-[11px] ${bCloser ? "font-bold text-accent-green" : "text-text-secondary"}`}>
-                          ~{travelB.miles.toLocaleString()} mi
-                        </span>
-                      </div>
-                      <div className="h-[4px] overflow-hidden rounded-full bg-background">
-                        <div
-                          className="h-full rounded-full transition-all duration-300"
-                          style={{
-                            width: `${Math.max((travelB.miles / maxMiles) * 100, 3)}%`,
-                            background: bCloser ? "#2EC4B6" : "rgb(var(--text-2) / 0.25)",
-                          }}
-                        />
-                      </div>
-                      <div className="mt-0.5 text-[9px] text-text-secondary/50">
-                        from {travelB.teamCity}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Fun context: 3x travel disparity */}
-                  {bigEdgeRatio >= 3 && travelA.miles !== travelB.miles && (
-                    <div className="mt-2 rounded-md bg-accent-green/8 px-2.5 py-1.5">
-                      <span className="text-[10px] leading-snug text-accent-green">
-                        {bigEdgeFar.teamCity.split(",")[0]} team is traveling ~{bigEdgeFar.miles.toLocaleString()} miles while {bigEdgeClose.teamCity.split(",")[0]} team is traveling ~{bigEdgeClose.miles.toLocaleString()} — significant home court edge for {bigEdgeTeam.name}.
+              <div className="space-y-2">
+                {/* Team A */}
+                <div>
+                  <div className="mb-0.5 flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
+                      <MapPin size={10} className={aCloser ? "text-accent-green" : "text-text-secondary/50"} />
+                      <span className={`text-[11px] ${aCloser ? "font-semibold text-text-primary" : "text-text-secondary"}`}>
+                        {teamA.name}
                       </span>
+                      {aHomeCourt && (
+                        <span className="rounded bg-accent-green/15 px-1 py-px text-[8px] font-bold text-accent-green">
+                          Home court edge
+                        </span>
+                      )}
                     </div>
-                  )}
-                </>
-              );
-            })()}
-          </div>
-        )}
+                    <span className={`font-mono text-[11px] ${aCloser ? "font-bold text-accent-green" : "text-text-secondary"}`}>
+                      ~{travelA.miles.toLocaleString()} mi
+                    </span>
+                  </div>
+                  <div className="h-[4px] overflow-hidden rounded-full bg-background">
+                    <div
+                      className="h-full rounded-full transition-all duration-300"
+                      style={{
+                        width: `${Math.max((travelA.miles / maxMiles) * 100, 3)}%`,
+                        background: aCloser ? "#2EC4B6" : "rgb(var(--text-2) / 0.25)",
+                      }}
+                    />
+                  </div>
+                  <div className="mt-0.5 text-[9px] text-text-secondary/50">
+                    from {travelA.teamCity}
+                  </div>
+                </div>
+
+                {/* Team B */}
+                <div>
+                  <div className="mb-0.5 flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
+                      <MapPin size={10} className={bCloser ? "text-accent-green" : "text-text-secondary/50"} />
+                      <span className={`text-[11px] ${bCloser ? "font-semibold text-text-primary" : "text-text-secondary"}`}>
+                        {teamB.name}
+                      </span>
+                      {bHomeCourt && (
+                        <span className="rounded bg-accent-green/15 px-1 py-px text-[8px] font-bold text-accent-green">
+                          Home court edge
+                        </span>
+                      )}
+                    </div>
+                    <span className={`font-mono text-[11px] ${bCloser ? "font-bold text-accent-green" : "text-text-secondary"}`}>
+                      ~{travelB.miles.toLocaleString()} mi
+                    </span>
+                  </div>
+                  <div className="h-[4px] overflow-hidden rounded-full bg-background">
+                    <div
+                      className="h-full rounded-full transition-all duration-300"
+                      style={{
+                        width: `${Math.max((travelB.miles / maxMiles) * 100, 3)}%`,
+                        background: bCloser ? "#2EC4B6" : "rgb(var(--text-2) / 0.25)",
+                      }}
+                    />
+                  </div>
+                  <div className="mt-0.5 text-[9px] text-text-secondary/50">
+                    from {travelB.teamCity}
+                  </div>
+                </div>
+              </div>
+
+              {/* Fun context: 3x travel disparity */}
+              {bigEdgeRatio >= 3 && travelA.miles !== travelB.miles && (
+                <div className="mt-2 rounded-md bg-accent-green/8 px-2.5 py-1.5">
+                  <span className="text-[10px] leading-snug text-accent-green">
+                    {bigEdgeFar.teamCity.split(",")[0]} team is traveling ~{bigEdgeFar.miles.toLocaleString()} miles while {bigEdgeClose.teamCity.split(",")[0]} team is traveling ~{bigEdgeClose.miles.toLocaleString()} — significant home court edge for {bigEdgeTeam.name}.
+                  </span>
+                </div>
+              )}
+            </div>
+          );
+        })()}
 
         {/* Actions */}
         <div className="flex gap-2 px-4 py-3">
