@@ -1,7 +1,4 @@
-import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
-
-export const runtime = "edge";
 
 /* ------------------------------------------------------------------ */
 /*  In-memory cache (30 min TTL)                                       */
@@ -58,7 +55,7 @@ const ABBREV_TO_FULL: Record<string, string> = {
   NDSU: "N. Dakota St.", "N DAKOTA ST": "N. Dakota St.", "ND STATE": "N. Dakota St.", NDS: "N. Dakota St.",
   UCLA: "UCLA",
   UCF: "UCF",
-  UCONN: "UConn", CONN: "UConn", UC: "UConn",
+  UCONN: "UConn", CONN: "UConn",
   FUR: "Furman", FURMAN: "Furman",
 
   // South Region
@@ -142,40 +139,60 @@ function resolveTeamName(raw: string): string {
 /*  Fetch betting data via Anthropic API with web search               */
 /* ------------------------------------------------------------------ */
 
+const PROMPT = `Search for NCAA Tournament 2026 first round betting lines, moneylines, spreads, and public betting percentages from sportsbettingdime.com college basketball public betting trends page. For each first round game, extract: team names, moneyline for each team, spread, and the BET% and $% columns for both moneyline and spread. BET% is the percentage of individual bets and $% is the percentage of total money wagered. Return as a JSON array where each game is: { "teamA": "<team name>", "teamB": "<team name>", "moneylineA": "<value>", "moneylineB": "<value>", "mlBetPctA": "<value>", "mlBetPctB": "<value>", "mlDollarPctA": "<value>", "mlDollarPctB": "<value>", "spread": "<value>", "spreadBetPctA": "<value>", "spreadBetPctB": "<value>", "spreadDollarPctA": "<value>", "spreadDollarPctB": "<value>", "total": "<value>", "gameDate": "<value>", "gameTime": "<value>" }. Get ALL tournament first round games. IMPORTANT: Return ONLY a raw JSON array, no markdown formatting, no code blocks, no explanation. Just the JSON.`;
+
 async function fetchBettingData(): Promise<BettingGame[]> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) throw new Error("ANTHROPIC_API_KEY not configured");
 
-  const client = new Anthropic({ apiKey });
-
-  const response = await client.messages.create({
-    model: "claude-sonnet-4-20250514",
-    max_tokens: 8192,
-    tools: [
-      {
-        type: "web_search_20250305",
-        name: "web_search",
-        max_uses: 10,
-      },
-    ],
-    messages: [
-      {
-        role: "user",
-        content: `Go to https://www.sportsbettingdime.com/college-basketball/public-betting-trends/ and find the betting lines for ALL 2026 NCAA Tournament first round games. The data is live on this page right now. For each game, extract: team abbreviations, moneyline for each team, spread for each team, and the BET% and $% columns for both moneyline and spread. BET% is the percentage of individual bets and $% is the percentage of total money wagered. Return as a JSON array where each game is: { "teamA": "<team abbreviation or name>", "teamB": "<team abbreviation or name>", "moneylineA": "<value>", "moneylineB": "<value>", "mlBetPctA": "<value>", "mlBetPctB": "<value>", "mlDollarPctA": "<value>", "mlDollarPctB": "<value>", "spread": "<value>", "spreadBetPctA": "<value>", "spreadBetPctB": "<value>", "spreadDollarPctA": "<value>", "spreadDollarPctB": "<value>", "total": "<value>", "gameDate": "<value>", "gameTime": "<value>" }. Get ALL tournament games, not just a few. IMPORTANT: Return ONLY a raw JSON array, no markdown formatting, no code blocks, no explanation. Just the JSON.`,
-      },
-    ],
+  // Use raw fetch to avoid SDK typing issues with web_search tool
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+    },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 8192,
+      tools: [
+        {
+          type: "web_search_20250305",
+          name: "web_search",
+          max_uses: 10,
+        },
+      ],
+      messages: [
+        {
+          role: "user",
+          content: PROMPT,
+        },
+      ],
+    }),
   });
+
+  if (!res.ok) {
+    const errBody = await res.text();
+    throw new Error(`Anthropic API error ${res.status}: ${errBody}`);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const body = (await res.json()) as any;
 
   // Extract text content from response
   let jsonText = "";
-  for (const block of response.content) {
+  for (const block of body.content ?? []) {
     if (block.type === "text") {
       jsonText += block.text;
     }
   }
 
-  // Try to parse JSON from the response
-  // Claude might wrap it in markdown code blocks
+  if (!jsonText) {
+    throw new Error("No text content in Anthropic response");
+  }
+
+  // Strip markdown code fences if present
   jsonText = jsonText
     .replace(/```json\s*/g, "")
     .replace(/```\s*/g, "")
@@ -226,6 +243,7 @@ export async function GET(req: Request) {
     });
   } catch (err) {
     const msg = err instanceof Error ? err.message : "Failed to fetch betting data";
+    console.error("Betting lines fetch error:", msg);
     // Return stale cache if available
     if (cache) {
       return NextResponse.json({
