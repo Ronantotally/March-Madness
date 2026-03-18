@@ -230,13 +230,48 @@ export default function MatchupDetail({ game, onClose, onAskAnalyst }: Props) {
               <ArchetypeBadge team={teamA} compact />
             </div>
           </div>
-          <div className="flex flex-col items-center justify-center px-3 py-3">
-            <span className="font-mono text-xl font-bold text-text-primary">
-              {Math.round(analysis.winProbabilityA * 100)}
+          <div className="flex flex-col items-center justify-center px-4 py-3">
+            <span className="mb-1 text-[8px] font-semibold uppercase tracking-wider text-text-secondary/60">
+              Win Prob
             </span>
-            <span className="text-[9px] text-text-secondary">vs</span>
-            <span className="font-mono text-xl font-bold text-text-primary">
-              {Math.round(analysis.winProbabilityB * 100)}
+            <span
+              className="font-mono text-xl font-bold"
+              style={{
+                color:
+                  analysis.winProbabilityA >= analysis.winProbabilityB
+                    ? "#2EC4B6"
+                    : "rgb(var(--text-2) / 0.45)",
+              }}
+            >
+              {Math.round(analysis.winProbabilityA * 100)}%
+            </span>
+            {/* Proportional probability bar */}
+            <div className="my-1.5 flex h-[3px] w-full overflow-hidden rounded-full">
+              <div
+                className="h-full rounded-l-full"
+                style={{
+                  width: `${Math.round(analysis.winProbabilityA * 100)}%`,
+                  background: "#2EC4B6",
+                }}
+              />
+              <div
+                className="h-full rounded-r-full"
+                style={{
+                  width: `${Math.round(analysis.winProbabilityB * 100)}%`,
+                  background: "rgb(var(--text-2) / 0.2)",
+                }}
+              />
+            </div>
+            <span
+              className="font-mono text-xl font-bold"
+              style={{
+                color:
+                  analysis.winProbabilityB >= analysis.winProbabilityA
+                    ? "#2EC4B6"
+                    : "rgb(var(--text-2) / 0.45)",
+              }}
+            >
+              {Math.round(analysis.winProbabilityB * 100)}%
             </span>
           </div>
           <div className="flex flex-1 flex-col items-center justify-center border-l border-border py-3">
