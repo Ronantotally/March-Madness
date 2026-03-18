@@ -1,3 +1,4 @@
+import Anthropic from "@anthropic-ai/sdk";
 import { NextResponse } from "next/server";
 
 /* ------------------------------------------------------------------ */
@@ -122,13 +123,10 @@ const ABBREV_TO_FULL: Record<string, string> = {
  */
 function resolveTeamName(raw: string): string {
   const upper = raw.trim().toUpperCase();
-  // Direct match
   if (ABBREV_TO_FULL[upper]) return ABBREV_TO_FULL[upper];
-  // Partial match: check if it starts with any known key
   for (const [abbr, full] of Object.entries(ABBREV_TO_FULL)) {
     if (upper.startsWith(abbr) || abbr.startsWith(upper)) return full;
   }
-  // Fuzzy: check if the raw string is a substring of a full name
   for (const full of Object.values(ABBREV_TO_FULL)) {
     if (full.toUpperCase().includes(upper) || upper.includes(full.toUpperCase())) return full;
   }
@@ -145,44 +143,27 @@ async function fetchBettingData(): Promise<BettingGame[]> {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) throw new Error("ANTHROPIC_API_KEY not configured");
 
-  // Use raw fetch to avoid SDK typing issues with web_search tool
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
-    },
-    body: JSON.stringify({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 8192,
-      tools: [
-        {
-          type: "web_search_20250305",
-          name: "web_search",
-          max_uses: 10,
-        },
-      ],
-      messages: [
-        {
-          role: "user",
-          content: PROMPT,
-        },
-      ],
-    }),
+  const client = new Anthropic({ apiKey });
+
+  // Use the SDK but cast the web search tool to bypass TypeScript restrictions.
+  // The API accepts this tool type even though the SDK types don't include it.
+  const response = await client.messages.create({
+    model: "claude-sonnet-4-20250514",
+    max_tokens: 8192,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    tools: [
+      {
+        type: "web_search_20250305",
+        name: "web_search",
+        max_uses: 10,
+      } as any, // eslint-disable-line @typescript-eslint/no-explicit-any
+    ],
+    messages: [{ role: "user", content: PROMPT }],
   });
-
-  if (!res.ok) {
-    const errBody = await res.text();
-    throw new Error(`Anthropic API error ${res.status}: ${errBody}`);
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const body = (await res.json()) as any;
 
   // Extract text content from response
   let jsonText = "";
-  for (const block of body.content ?? []) {
+  for (const block of response.content) {
     if (block.type === "text") {
       jsonText += block.text;
     }
@@ -202,12 +183,11 @@ async function fetchBettingData(): Promise<BettingGame[]> {
   const arrayStart = jsonText.indexOf("[");
   const arrayEnd = jsonText.lastIndexOf("]");
   if (arrayStart === -1 || arrayEnd === -1) {
-    throw new Error("No JSON array found in response");
+    throw new Error("No JSON array found in response. Raw text: " + jsonText.slice(0, 200));
   }
 
   const parsed = JSON.parse(jsonText.slice(arrayStart, arrayEnd + 1)) as BettingGame[];
 
-  // Resolve team names
   return parsed.map((game) => ({
     ...game,
     teamA: resolveTeamName(game.teamA),

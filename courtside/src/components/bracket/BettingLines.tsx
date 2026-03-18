@@ -124,6 +124,7 @@ export default function BettingLines({ teamAName, teamBName }: Props) {
         </div>
         <p className="py-2 text-center text-[10px] text-text-secondary/60">
           Betting data unavailable
+          {error && <span className="mt-1 block text-[9px] text-accent-red/60">{error.slice(0, 100)}</span>}
         </p>
       </div>
     );
