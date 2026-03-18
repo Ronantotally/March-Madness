@@ -12,46 +12,47 @@ interface MatchupDef {
 }
 
 // Real 2026 first-round matchups by region
+// Order: 1v16, 8v9, 5v12, 4v13, 6v11, 3v14, 7v10, 2v15 (standard NCAA bracket)
 const FIRST_ROUND: Record<string, MatchupDef[]> = {
   East: [
-    { topSeed: "Duke", bottomSeed: "Siena" },
-    { topSeed: "Ohio St.", bottomSeed: "TCU" },
-    { topSeed: "St. John's", bottomSeed: "Northern Iowa" },
-    { topSeed: "Kansas", bottomSeed: "Cal Baptist" },
-    { topSeed: "Louisville", bottomSeed: "South Florida" },
-    { topSeed: "UCLA", bottomSeed: "UCF" },
-    { topSeed: "Michigan St.", bottomSeed: "N. Dakota St." },
-    { topSeed: "UConn", bottomSeed: "Furman" },
+    { topSeed: "Duke", bottomSeed: "Siena" },           // 1v16
+    { topSeed: "Ohio St.", bottomSeed: "TCU" },          // 8v9
+    { topSeed: "St. John's", bottomSeed: "Northern Iowa" }, // 5v12
+    { topSeed: "Kansas", bottomSeed: "Cal Baptist" },    // 4v13
+    { topSeed: "Louisville", bottomSeed: "South Florida" }, // 6v11
+    { topSeed: "Michigan St.", bottomSeed: "N. Dakota St." }, // 3v14
+    { topSeed: "UCLA", bottomSeed: "UCF" },              // 7v10
+    { topSeed: "UConn", bottomSeed: "Furman" },          // 2v15
   ],
   South: [
-    { topSeed: "Florida", bottomSeed: "Lehigh", isPlayIn: true, playInTeams: ["Lehigh", "Prairie View A&M"] },
-    { topSeed: "Clemson", bottomSeed: "Iowa" },
-    { topSeed: "Vanderbilt", bottomSeed: "McNeese" },
-    { topSeed: "Nebraska", bottomSeed: "Troy" },
-    { topSeed: "North Carolina", bottomSeed: "VCU" },
-    { topSeed: "Saint Mary's", bottomSeed: "Texas A&M" },
-    { topSeed: "Illinois", bottomSeed: "Penn" },
-    { topSeed: "Houston", bottomSeed: "Idaho" },
+    { topSeed: "Florida", bottomSeed: "Lehigh", isPlayIn: true, playInTeams: ["Lehigh", "Prairie View A&M"] }, // 1v16
+    { topSeed: "Clemson", bottomSeed: "Iowa" },          // 8v9
+    { topSeed: "Vanderbilt", bottomSeed: "McNeese" },    // 5v12
+    { topSeed: "Nebraska", bottomSeed: "Troy" },         // 4v13
+    { topSeed: "North Carolina", bottomSeed: "VCU" },    // 6v11
+    { topSeed: "Illinois", bottomSeed: "Penn" },         // 3v14
+    { topSeed: "Saint Mary's", bottomSeed: "Texas A&M" }, // 7v10
+    { topSeed: "Houston", bottomSeed: "Idaho" },         // 2v15
   ],
   Midwest: [
-    { topSeed: "Michigan", bottomSeed: "UMBC", isPlayIn: true, playInTeams: ["UMBC", "Howard"] },
-    { topSeed: "Georgia", bottomSeed: "Saint Louis" },
-    { topSeed: "Texas Tech", bottomSeed: "Akron" },
-    { topSeed: "Alabama", bottomSeed: "Hofstra" },
-    { topSeed: "Tennessee", bottomSeed: "SMU", isPlayIn: true, playInTeams: ["SMU", "Miami OH"] },
-    { topSeed: "Kentucky", bottomSeed: "Santa Clara" },
-    { topSeed: "Virginia", bottomSeed: "Wright St." },
-    { topSeed: "Iowa St.", bottomSeed: "Tennessee St." },
+    { topSeed: "Michigan", bottomSeed: "UMBC", isPlayIn: true, playInTeams: ["UMBC", "Howard"] }, // 1v16
+    { topSeed: "Georgia", bottomSeed: "Saint Louis" },   // 8v9
+    { topSeed: "Texas Tech", bottomSeed: "Akron" },      // 5v12
+    { topSeed: "Alabama", bottomSeed: "Hofstra" },       // 4v13
+    { topSeed: "Tennessee", bottomSeed: "SMU", isPlayIn: true, playInTeams: ["SMU", "Miami OH"] }, // 6v11
+    { topSeed: "Virginia", bottomSeed: "Wright St." },   // 3v14
+    { topSeed: "Kentucky", bottomSeed: "Santa Clara" },  // 7v10
+    { topSeed: "Iowa St.", bottomSeed: "Tennessee St." }, // 2v15
   ],
   West: [
-    { topSeed: "Arizona", bottomSeed: "LIU" },
-    { topSeed: "Villanova", bottomSeed: "Utah St." },
-    { topSeed: "Wisconsin", bottomSeed: "High Point" },
-    { topSeed: "Arkansas", bottomSeed: "Hawaii" },
-    { topSeed: "BYU", bottomSeed: "N.C. State", isPlayIn: true, playInTeams: ["N.C. State", "Texas"] },
-    { topSeed: "Miami FL", bottomSeed: "Missouri" },
-    { topSeed: "Gonzaga", bottomSeed: "Kennesaw St." },
-    { topSeed: "Purdue", bottomSeed: "Queens" },
+    { topSeed: "Arizona", bottomSeed: "LIU" },          // 1v16
+    { topSeed: "Villanova", bottomSeed: "Utah St." },    // 8v9
+    { topSeed: "Wisconsin", bottomSeed: "High Point" },  // 5v12
+    { topSeed: "Arkansas", bottomSeed: "Hawaii" },       // 4v13
+    { topSeed: "BYU", bottomSeed: "N.C. State", isPlayIn: true, playInTeams: ["N.C. State", "Texas"] }, // 6v11
+    { topSeed: "Gonzaga", bottomSeed: "Kennesaw St." },  // 3v14
+    { topSeed: "Miami FL", bottomSeed: "Missouri" },     // 7v10
+    { topSeed: "Purdue", bottomSeed: "Queens" },         // 2v15
   ],
 };
 
