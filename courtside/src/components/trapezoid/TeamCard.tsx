@@ -2,10 +2,11 @@
 
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { X, Trophy, Target, Shield, Zap, TrendingUp, BarChart3, Gauge, Dice5, ArrowRight } from "lucide-react";
+import { X, Trophy, Target, Shield, Zap, TrendingUp, BarChart3, Gauge, Dice5, ArrowRight, MapPin } from "lucide-react";
 import { Team, TeamTier } from "@/types";
 import StatTooltip from "@/components/shared/StatTooltip";
 import ArchetypeBadge from "@/components/shared/ArchetypeBadge";
+import { getTeamTravelInfo } from "@/data/locations";
 
 const TIER_COLORS: Record<TeamTier, string> = {
   title_contender: "#F5A623",
@@ -93,6 +94,7 @@ function CheckItem({ label, met }: { label: string; met: boolean }) {
 export default function TeamCard({ team, onClose }: Props) {
   const router = useRouter();
   const tierColor = TIER_COLORS[team.tier];
+  const travel = getTeamTravelInfo(team.name);
 
   return (
     <motion.div
@@ -198,6 +200,21 @@ export default function TeamCard({ team, onClose }: Props) {
           value={team.luck > 0 ? `+${team.luck.toFixed(3)}` : team.luck.toFixed(3)}
         />
       </div>
+
+      {/* First round venue */}
+      {travel && (
+        <div className="flex items-center gap-2 border-b border-border px-4 py-2.5">
+          <MapPin size={12} className={travel.miles < 200 ? "text-accent-green" : "text-text-secondary"} />
+          <div className="flex-1">
+            <span className="text-[11px] text-text-secondary">
+              First round: <span className="font-semibold text-text-primary">{travel.venueCity}</span>
+            </span>
+            <span className={`ml-1.5 font-mono text-[10px] ${travel.miles < 200 ? "font-semibold text-accent-green" : "text-text-secondary"}`}>
+              (~{travel.miles.toLocaleString()} mi from campus)
+            </span>
+          </div>
+        </div>
+      )}
 
       {/* Championship formula */}
       <div className="border-b border-border px-4 py-3">
