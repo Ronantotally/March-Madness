@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { BarChart2 } from "lucide-react";
 import { Team, BracketGame, TeamTier } from "@/types";
 import { analyzeMatchup } from "@/data/matchup";
+import { getLogoUrl } from "@/data/teamLogos";
 
 const TIER_COLORS: Record<TeamTier, string> = {
   title_contender: "#F5A623",
@@ -82,6 +83,17 @@ function TeamRow({ team, isWinner, isTop, onClick, isPlayIn }: TeamRowProps) {
       <span className="w-4 shrink-0 font-mono text-[10px] text-text-secondary">
         {team.seed}
       </span>
+      {getLogoUrl(team.name) && (
+        <img
+          src={getLogoUrl(team.name)!}
+          alt=""
+          width={16}
+          height={16}
+          loading="lazy"
+          className="shrink-0 object-contain"
+          style={{ width: 16, height: 16 }}
+        />
+      )}
       <span
         className={`flex-1 truncate text-[11px] font-medium ${
           isWinner ? "text-text-primary" : "text-text-secondary"

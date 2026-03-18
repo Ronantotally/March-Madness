@@ -7,6 +7,7 @@ import { getAllTeams } from "@/data/teamUtils";
 import { getTrapezoidVertices } from "@/data/trapezoid";
 import TeamCard from "./TeamCard";
 import { getArchetype } from "@/data/archetypes";
+import { getLogoUrl, getTeamAbbrev } from "@/data/teamLogos";
 
 // ---------- constants ----------
 const TIER_COLORS: Record<TeamTier, string> = {
@@ -44,8 +45,12 @@ function xScale(pace: number) {
 function yScale(netRtg: number) {
   return MARGIN.top + ((Y_MAX - netRtg) / (Y_MAX - Y_MIN)) * INNER_H;
 }
-function dotRadius(seed: number) {
-  return Math.max(5, 14 - (seed - 1) * 0.65);
+function logoSize(seed: number) {
+  if (seed <= 1) return 32;
+  if (seed <= 4) return 28;
+  if (seed <= 8) return 24;
+  if (seed <= 12) return 20;
+  return 16;
 }
 
 // ---------- filter types ----------
@@ -369,7 +374,7 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
           </filter>
         </defs>
 
-        {/* Team dots — render long_shot first so they appear behind */}
+        {/* Team logos — render long_shot first so they appear behind */}
         {allTeams
           .slice()
           .sort((a, b) => {
@@ -385,22 +390,34 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
           .map((team) => {
             const cx = xScale(team.adjT);
             const cy = yScale(team.netRtg);
-            const r = dotRadius(team.seed);
+            const size = logoSize(team.seed);
             const color = TIER_COLORS[team.tier];
             const isDimmed = dimmedTeams.has(team.name);
             const isHovered = hoveredTeam?.name === team.name;
             const isSelected = selectedTeam?.name === team.name;
             const isHighlighted = highlightedTeam === team.name;
             const isGold = team.tier === "title_contender";
+            const active = isHighlighted || isHovered || isSelected;
+            const s = active ? size * 1.25 : size;
+            const logoUrl = getLogoUrl(team.name);
+            const half = s / 2;
 
             return (
-              <g key={team.name}>
+              <g
+                key={team.name}
+                style={{ cursor: "pointer" }}
+                onMouseMove={(e) => handleMouseMove(e, team)}
+                onMouseLeave={() => setHoveredTeam(null)}
+                onClick={() =>
+                  setSelectedTeam(selectedTeam?.name === team.name ? null : team)
+                }
+              >
                 {/* Highlight pulse ring */}
                 {isHighlighted && (
                   <circle
                     cx={cx}
                     cy={cy}
-                    r={r * 2.5}
+                    r={size}
                     fill="none"
                     stroke="#F5A623"
                     strokeWidth={2}
@@ -408,41 +425,57 @@ export default function TrapezoidChart({ filter, filterRegion, filterSeedRange, 
                     className="animate-ping"
                   />
                 )}
+                {/* Tier glow ring */}
                 <circle
                   cx={cx}
                   cy={cy}
-                  r={isHighlighted ? r * 1.5 : isHovered ? r * 1.5 : isSelected ? r * 1.3 : r}
-                  fill={color}
-                  fillOpacity={isDimmed ? 0.12 : isGold ? 0.9 : 0.75}
-                  stroke={isHighlighted ? "#F5A623" : isSelected ? "var(--hex-text-1)" : isHovered ? color : "none"}
-                  strokeWidth={isHighlighted ? 2.5 : isSelected ? 2 : isHovered ? 1.5 : 0}
+                  r={half + 2}
+                  fill="none"
+                  stroke={color}
+                  strokeWidth={active ? 2.5 : isGold ? 2 : 1.5}
+                  strokeOpacity={isDimmed ? 0.15 : isGold ? 0.8 : 0.5}
                   filter={isGold && !isDimmed ? "url(#glow-gold)" : undefined}
-                  style={{
-                    cursor: "pointer",
-                    transition: "r 0.15s ease, fill-opacity 0.2s ease, stroke-width 0.15s ease",
-                    transformOrigin: `${cx}px ${cy}px`,
-                    animation: `dot-appear 0.4s ease-out ${Math.random() * 0.6}s both`,
-                  }}
-                  onMouseMove={(e) => handleMouseMove(e, team)}
-                  onMouseLeave={() => setHoveredTeam(null)}
-                  onClick={() =>
-                    setSelectedTeam(selectedTeam?.name === team.name ? null : team)
-                  }
                 />
-                {/* Seed label for 1-4 seeds when not dimmed */}
-                {team.seed <= 4 && !isDimmed && (
-                  <text
-                    x={cx}
-                    y={cy + (r > 10 ? 3.5 : 3)}
-                    textAnchor="middle"
-                    fill="var(--hex-bg)"
-                    fontSize={r > 10 ? 9 : 7}
-                    fontWeight={700}
-                    fontFamily="var(--font-mono)"
-                    pointerEvents="none"
-                  >
-                    {team.seed}
-                  </text>
+                {/* Clip circle for logo */}
+                <clipPath id={`clip-${team.name.replace(/[^a-zA-Z0-9]/g, "")}`}>
+                  <circle cx={cx} cy={cy} r={half} />
+                </clipPath>
+                {/* Logo or fallback */}
+                {logoUrl ? (
+                  <image
+                    href={logoUrl}
+                    x={cx - half}
+                    y={cy - half}
+                    width={s}
+                    height={s}
+                    clipPath={`url(#clip-${team.name.replace(/[^a-zA-Z0-9]/g, "")})`}
+                    opacity={isDimmed ? 0.15 : 1}
+                    style={{
+                      transition: "opacity 0.2s ease",
+                    }}
+                  />
+                ) : (
+                  <>
+                    <circle
+                      cx={cx}
+                      cy={cy}
+                      r={half}
+                      fill={color}
+                      fillOpacity={isDimmed ? 0.12 : 0.75}
+                    />
+                    <text
+                      x={cx}
+                      y={cy + 3}
+                      textAnchor="middle"
+                      fill="var(--hex-bg)"
+                      fontSize={7}
+                      fontWeight={700}
+                      fontFamily="var(--font-mono)"
+                      pointerEvents="none"
+                    >
+                      {getTeamAbbrev(team.name)}
+                    </text>
+                  </>
                 )}
               </g>
             );
