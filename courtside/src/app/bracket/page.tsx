@@ -1,10 +1,9 @@
 "use client";
 
-import { Suspense, useState, useCallback, useEffect } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { AnimatePresence } from "framer-motion";
 import { Team, BracketGame } from "@/types";
-import { createInitialBracketState, advanceTeam } from "@/data/bracket";
 import RegionBracket from "@/components/bracket/RegionBracket";
 import FinalFour from "@/components/bracket/FinalFour";
 import BracketHeader from "@/components/bracket/BracketHeader";
@@ -13,22 +12,24 @@ import ShareCard from "@/components/shared/ShareCard";
 import TournamentIntel from "@/components/bracket/TournamentIntel";
 import ChampionProfile from "@/components/bracket/ChampionProfile";
 import UpsetRadar from "@/components/bracket/UpsetRadar";
-import { useChatContext } from "@/components/chat/ChatContext";
+import { useBracketStore, useChatStore } from "@/lib/stores";
 
 const REGIONS_TOP = ["East", "South"];
 const REGIONS_BOTTOM = ["Midwest", "West"];
 
 function BracketContent() {
   const searchParams = useSearchParams();
-  const [bracketState, setBracketState] = useState(() =>
-    createInitialBracketState()
-  );
-  const [expandedGame, setExpandedGame] = useState<BracketGame | null>(null);
+  const bracketState = useBracketStore((s) => s.bracketState);
+  const pick = useBracketStore((s) => s.pick);
+  const reset = useBracketStore((s) => s.reset);
+  const expandedGame = useBracketStore((s) => s.expandedGame);
+  const setExpandedGame = useBracketStore((s) => s.setExpandedGame);
+  const askQuestion = useChatStore((s) => s.askQuestion);
+
   const [highlightedTeam, setHighlightedTeam] = useState<string | null>(null);
   const [shareOpen, setShareOpen] = useState(false);
   const [championProfileOpen, setChampionProfileOpen] = useState(true);
   const [upsetRadarOpen, setUpsetRadarOpen] = useState(true);
-  const { askQuestion } = useChatContext();
 
   // Handle ?team= query param for cross-page navigation
   useEffect(() => {
@@ -40,25 +41,34 @@ function BracketContent() {
     }
   }, [searchParams]);
 
-  const handlePick = useCallback((gameId: string, team: Team) => {
-    setBracketState((prev) => advanceTeam(prev, gameId, team));
-  }, []);
+  const handlePick = useCallback(
+    (gameId: string, team: Team) => {
+      pick(gameId, team);
+    },
+    [pick]
+  );
 
-  const handleExpand = useCallback((game: BracketGame) => {
-    setExpandedGame(game);
-  }, []);
+  const handleExpand = useCallback(
+    (game: BracketGame) => {
+      setExpandedGame(game);
+    },
+    [setExpandedGame]
+  );
 
   const handleReset = useCallback(() => {
-    setBracketState(createInitialBracketState());
-  }, []);
+    reset();
+  }, [reset]);
 
-  const handleAskAnalyst = useCallback((teamA: Team, teamB: Team) => {
-    setExpandedGame(null);
-    askQuestion(
-      `Break down the matchup between ${teamA.name} (${teamA.seed}-seed) and ${teamB.name} (${teamB.seed}-seed). Who wins and why?`,
-      { view: "bracket", matchup: { teamA, teamB } }
-    );
-  }, [askQuestion]);
+  const handleAskAnalyst = useCallback(
+    (teamA: Team, teamB: Team) => {
+      setExpandedGame(null);
+      askQuestion(
+        `Break down the matchup between ${teamA.name} (${teamA.seed}-seed) and ${teamB.name} (${teamB.seed}-seed). Who wins and why?`,
+        { view: "bracket", matchup: { teamA, teamB } }
+      );
+    },
+    [askQuestion, setExpandedGame]
+  );
 
   return (
     <div className="mx-auto max-w-[1600px] px-3 py-4 sm:px-4 sm:py-6">

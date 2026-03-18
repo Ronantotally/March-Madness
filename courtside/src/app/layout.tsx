@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { ChatProvider } from "@/components/chat/ChatContext";
 import { ThemeProvider } from "@/components/shared/ThemeContext";
 import ChatPanel from "@/components/chat/ChatPanel";
 import Nav from "@/components/shared/Nav";
@@ -72,14 +71,12 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
       >
         <ThemeProvider>
-          <ChatProvider>
-            <div className="flex min-h-screen flex-col bg-background text-text-primary">
-              <Nav />
-              <main className="flex-1">{children}</main>
-            </div>
-            <ChatPanel />
-            <StatsGuide />
-          </ChatProvider>
+          <div className="flex min-h-screen flex-col bg-background text-text-primary">
+            <Nav />
+            <main className="flex-1">{children}</main>
+          </div>
+          <ChatPanel />
+          <StatsGuide />
         </ThemeProvider>
       </body>
     </html>

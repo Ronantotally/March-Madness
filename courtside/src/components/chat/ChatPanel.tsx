@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageSquare, X, Send, Loader2, Trash2 } from "lucide-react";
-import { useChatContext } from "./ChatContext";
+import { useChatStore } from "@/lib/stores";
 import { streamChat, ChatMessageData } from "@/lib/api";
 
 const STARTER_PROMPTS = [
@@ -18,19 +18,19 @@ function generateId() {
 }
 
 export default function ChatPanel() {
-  const {
-    isOpen,
-    setIsOpen,
-    context,
-    pendingQuestion,
-    clearPendingQuestion,
-  } = useChatContext();
+  const isOpen = useChatStore((s) => s.isOpen);
+  const setIsOpen = useChatStore((s) => s.setIsOpen);
+  const context = useChatStore((s) => s.context);
+  const pendingQuestion = useChatStore((s) => s.pendingQuestion);
+  const clearPendingQuestion = useChatStore((s) => s.clearPendingQuestion);
+  const messages = useChatStore((s) => s.messages);
+  const setMessages = useChatStore((s) => s.setMessages);
+  const clearMessages = useChatStore((s) => s.clearMessages);
 
-  const [messages, setMessages] = useState<ChatMessageData[]>([]);
-  const [input, setInput] = useState("");
-  const [isStreaming, setIsStreaming] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const isStreamingRef = useRef(false);
+  const inputValueRef = useRef("");
 
   const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -42,15 +42,15 @@ export default function ChatPanel() {
 
   // Handle pending question from "Ask the Analyst"
   useEffect(() => {
-    if (pendingQuestion && isOpen && !isStreaming) {
+    if (pendingQuestion && isOpen && !isStreamingRef.current) {
       sendMessage(pendingQuestion);
       clearPendingQuestion();
     }
-  }, [pendingQuestion, isOpen, isStreaming]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [pendingQuestion, isOpen]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const sendMessage = useCallback(
     async (text: string) => {
-      if (!text.trim() || isStreaming) return;
+      if (!text.trim() || isStreamingRef.current) return;
 
       const userMsg: ChatMessageData = {
         id: generateId(),
@@ -67,11 +67,13 @@ export default function ChatPanel() {
         isStreaming: true,
       };
 
-      setMessages((prev) => [...prev, userMsg, assistantMsg]);
-      setInput("");
-      setIsStreaming(true);
+      const currentMessages = useChatStore.getState().messages;
+      setMessages([...currentMessages, userMsg, assistantMsg]);
+      inputValueRef.current = "";
+      if (inputRef.current) inputRef.current.value = "";
+      isStreamingRef.current = true;
 
-      const history = [...messages, userMsg].map((m) => ({
+      const history = [...currentMessages, userMsg].map((m) => ({
         role: m.role,
         content: m.content,
       }));
@@ -104,7 +106,7 @@ export default function ChatPanel() {
             }
             return updated;
           });
-          setIsStreaming(false);
+          isStreamingRef.current = false;
         },
         (error) => {
           setMessages((prev) => {
@@ -119,20 +121,16 @@ export default function ChatPanel() {
             }
             return updated;
           });
-          setIsStreaming(false);
+          isStreamingRef.current = false;
         }
       );
     },
-    [isStreaming, messages, context]
+    [context, setMessages]
   );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    sendMessage(input);
-  };
-
-  const handleClear = () => {
-    setMessages([]);
+    sendMessage(inputValueRef.current);
   };
 
   return (
@@ -170,7 +168,7 @@ export default function ChatPanel() {
               <div className="flex items-center gap-1">
                 {messages.length > 0 && (
                   <button
-                    onClick={handleClear}
+                    onClick={clearMessages}
                     className="rounded p-1 text-text-secondary transition-colors hover:bg-background hover:text-text-primary"
                     title="Clear chat"
                   >
@@ -264,26 +262,18 @@ export default function ChatPanel() {
                 <input
                   ref={inputRef}
                   type="text"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  placeholder={
-                    isStreaming
-                      ? "Analyzing..."
-                      : "Ask about a team or matchup..."
-                  }
-                  disabled={isStreaming}
+                  defaultValue=""
+                  onChange={(e) => {
+                    inputValueRef.current = e.target.value;
+                  }}
+                  placeholder="Ask about a team or matchup..."
                   className="flex-1 bg-transparent text-sm text-text-primary placeholder-text-secondary outline-none disabled:opacity-50"
                 />
                 <button
                   type="submit"
                   className="rounded p-1 text-text-secondary transition-colors hover:text-accent-gold disabled:opacity-30"
-                  disabled={!input.trim() || isStreaming}
                 >
-                  {isStreaming ? (
-                    <Loader2 size={16} className="animate-spin" />
-                  ) : (
-                    <Send size={16} />
-                  )}
+                  <Send size={16} />
                 </button>
               </div>
             </form>
