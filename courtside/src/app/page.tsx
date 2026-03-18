@@ -93,7 +93,7 @@ function HomeContent() {
       </div>
 
       {/* Sidebar + Chart layout */}
-      <div className="mb-4 flex flex-col gap-4 lg:flex-row">
+      <div className="mb-4 flex flex-col-reverse gap-4 lg:flex-row">
         {/* Sidebar — collapses to horizontal strip on mobile */}
         <TrapezoidSidebar
           activeTier={activeTier}
